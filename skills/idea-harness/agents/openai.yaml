@@ -1,0 +1,7 @@
+interface:
+  display_name: "Idea Harness"
+  short_description: "把模糊想法变成受控需求契约"
+  default_prompt: "使用 $idea-harness 在计划或写代码前澄清我的小应用想法。"
+
+policy:
+  allow_implicit_invocation: true

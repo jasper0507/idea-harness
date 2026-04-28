@@ -1,0 +1,34 @@
+{
+  "name": "idea-harness",
+  "version": "0.1.0",
+  "description": "面向非程序员的小应用需求入口控制 Skill，把模糊想法转成有证据、有边界的需求契约。",
+  "author": {
+    "name": "Idea Harness Contributors"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "requirements",
+    "harness",
+    "skills",
+    "prompt",
+    "specification"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Idea Harness",
+    "shortDescription": "小应用想法的证据优先需求门禁",
+    "longDescription": "Idea Harness 帮助非程序员在进入开发计划或代码实现前，把小网站、小工具、小应用的模糊想法澄清成有证据、有边界、可验收的需求契约。",
+    "developerName": "Idea Harness Contributors",
+    "category": "Coding",
+    "capabilities": [
+      "Interactive",
+      "Read"
+    ],
+    "defaultPrompt": [
+      "使用 $idea-harness 先澄清我的小应用想法。",
+      "使用 $idea-harness 把这个模糊想法变成需求契约。"
+    ],
+    "brandColor": "#2563EB",
+    "screenshots": []
+  }
+}
