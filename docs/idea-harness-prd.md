@@ -187,6 +187,12 @@ idea-harness/
 
 Markdown Skill 仍保持轻量；可执行脚本只校验输出结构和门禁规则，不接管语义判断。
 
+架构边界：
+
+- `skills/idea-harness/` 是运行时 Skill，可被插件加载。
+- `scripts/validate_output.py` 是仓库级 QA harness，不是 Skill 运行时依赖。
+- `tests/idea-harness/fixtures/` 是 golden / negative examples，用于验证门禁规则。
+
 ### 6.2 SKILL.md 职责
 
 `SKILL.md` 只放核心工作流：
@@ -243,6 +249,8 @@ V1 的 Evidence Ledger 评估以下字段：
 | Input/output | 用户输入什么，得到什么 |
 | Acceptance criteria | 用户如何判断它做成了 |
 
+命名约定：Evidence Ledger 必须使用 `Explicit non-goals` 作为门禁字段名；Requirement Contract 可以把同一概念渲染为更面向产品的 `V1 non-goals`。
+
 技术栈不是 V1 必填字段，因为目标用户是非程序员。
 
 ### 7.3 阻塞未知项
@@ -278,7 +286,7 @@ Idea Harness 使用状态门禁，而不是 AI 自信程度。
 如果 Goal 不是 Confirmed -> Blocked
 否则如果 Primary user 不是 Confirmed -> Blocked
 否则如果 Core workflow 不是 Confirmed -> 最多 Draftable
-否则如果 MVP must-haves 或 V1 non-goals 不是 Confirmed -> 最多 Draftable
+否则如果 MVP must-haves 或 Explicit non-goals 不是 Confirmed -> 最多 Draftable
 否则如果 data persistence 相关且不是 Confirmed -> 最多 Contract-Ready
 否则如果 Acceptance criteria 不是 Confirmed -> 最多 Contract-Ready
 否则 -> Execution-Ready
@@ -466,7 +474,7 @@ Reason: 目标过宽，用户想管理的学习对象尚未确认。
 | Primary user | Candidate | 可能是个人使用，但用户未明确 | Medium |
 | Core workflow | Missing | None | High |
 | MVP must-haves | Missing | None | High |
-| V1 non-goals | Missing | None | High |
+| Explicit non-goals | Missing | None | High |
 | Data persistence | Missing | None | Medium |
 | Acceptance criteria | Missing | None | High |
 
@@ -521,8 +529,15 @@ D. 学习时间和打卡
 - 检查未确认字段是否被写入最终执行 Prompt 的硬需求。
 - 检查 Assumption Firewall 是否存在。
 - 检查 `Execution-Ready` 状态是否包含验收标准。
+- 支持 `--output` 单文件校验。
+- 支持 `--fixtures-dir` 批量校验 `valid-*.md` 和 `invalid-*.md`。
+- 支持 `--json` 输出机器可读报告，包含 `mode`、`summary` 和 `results`。
+- 空 fixtures 目录必须失败。
+- fixtures 批量模式下，Markdown 文件必须使用 `valid-*.md` 或 `invalid-*.md` 命名，否则必须失败。
+- `--json` 在参数解析成功后输出机器可读报告；`argparse` 自身的命令用法错误仍按 Python 默认方式输出到 stderr。
+- 验证器只做结构和门禁校验，不判断自然语言语义是否完全正确；自由文本中的隐性需求泄漏仍需要人工 review。
 
-脚本不判断语义正确性，只做结构校验。
+当前不加入开源发布材料：不新增 `LICENSE`、`CONTRIBUTING.md`、GitHub Actions、issue templates、release notes 或 security policy，`.codex-plugin/plugin.json` 保持 `UNLICENSED`。
 
 ### 阶段 3：示例与比赛材料
 

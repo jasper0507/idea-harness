@@ -1,4 +1,5 @@
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -41,7 +42,17 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Validate an Idea Harness output Markdown file."
     )
-    parser.add_argument("--output", required=True, help="Path to output Markdown file")
+    target = parser.add_mutually_exclusive_group(required=True)
+    target.add_argument("--output", help="Path to output Markdown file")
+    target.add_argument(
+        "--fixtures-dir",
+        help="Directory containing valid-*.md and invalid-*.md fixture files",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Print a machine-readable JSON validation report",
+    )
     return parser.parse_args()
 
 
@@ -160,6 +171,11 @@ def validate(text: str) -> list[str]:
             errors.append(f"Confirmed row has no user evidence: {row['field']}.")
 
     if state == "Execution-Ready":
+        row_fields = {row["field"] for row in rows}
+        for field in sorted(EXECUTION_GATE_FIELDS):
+            if field not in row_fields:
+                errors.append(f"Execution-Ready missing execution gate field: {field}.")
+
         for row in rows:
             if row["field"] in EXECUTION_GATE_FIELDS and row["status"] != "Confirmed":
                 errors.append(
@@ -204,23 +220,196 @@ def validate(text: str) -> list[str]:
     return errors
 
 
-def main() -> int:
-    args = parse_args()
-    text, error = read_text(Path(args.output))
+def expected_from_path(path: Path) -> str:
+    name = path.name
+    if name.startswith("valid-"):
+        return "valid"
+    if name.startswith("invalid-"):
+        return "invalid"
+    return "unknown"
+
+
+def is_read_error(result: dict[str, object]) -> bool:
+    prefixes = ("Could not read output file:", "Output file is not valid UTF-8:")
+    return any(str(error).startswith(prefixes) for error in result["errors"])
+
+
+def result_for_file(
+    path: Path,
+    expected: str = "unknown",
+    enforce_fixture_name: bool = False,
+) -> dict[str, object]:
+    text, error = read_text(path)
     if error:
-        print(error, file=sys.stderr)
+        errors = [error]
+    else:
+        assert text is not None
+        errors = validate(text)
+
+    if enforce_fixture_name and expected == "unknown":
+        errors.append(
+            "Fixture filename must start with valid- or invalid-: "
+            f"{path.name}."
+        )
+
+    valid = not errors
+    if error:
+        passed = False
+    elif enforce_fixture_name and expected == "unknown":
+        passed = False
+    elif expected == "valid":
+        passed = valid
+    elif expected == "invalid":
+        passed = not valid
+    else:
+        passed = valid
+
+    return {
+        "path": str(path),
+        "expected": expected,
+        "valid": valid,
+        "passed": passed,
+        "errors": errors,
+    }
+
+
+def build_report(mode: str, results: list[dict[str, object]]) -> dict[str, object]:
+    passed = sum(1 for result in results if result["passed"])
+    failed = len(results) - passed
+    return {
+        "mode": mode,
+        "summary": {
+            "total": len(results),
+            "passed": passed,
+            "failed": failed,
+        },
+        "results": results,
+    }
+
+
+def print_text_report(report: dict[str, object]) -> None:
+    mode = report["mode"]
+    summary = report["summary"]
+    results = report["results"]
+
+    if summary["failed"] == 0:
+        if mode == "fixtures":
+            print(
+                "Fixture validation passed: "
+                f"{summary['passed']}/{summary['total']} matched expectations"
+            )
+        else:
+            result = results[0]
+            print(f"Validation passed: {result['path']}")
+        return
+
+    print("Validation failed:")
+    for result in results:
+        if result["passed"]:
+            continue
+
+        path = result["path"]
+        expected = result["expected"]
+        valid = result["valid"]
+        if expected == "valid" and not valid:
+            print(f"- Expected valid fixture to pass: {path}")
+        elif expected == "invalid" and valid:
+            print(f"- Expected invalid fixture to fail: {path}")
+        else:
+            print(f"- Output failed validation: {path}")
+
+        for error_message in result["errors"]:
+            print(f"  - {error_message}")
+
+
+def validate_output_file(path: Path, as_json: bool) -> int:
+    if not path.exists():
+        error = f"Could not read output file: {path}"
+        if as_json:
+            report = build_report(
+                "file",
+                [
+                    {
+                        "path": str(path),
+                        "expected": "unknown",
+                        "valid": False,
+                        "passed": False,
+                        "errors": [error],
+                    }
+                ],
+            )
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+        else:
+            print(error, file=sys.stderr)
         return 2
 
-    assert text is not None
-    errors = validate(text)
-    if errors:
-        print("Validation failed:")
-        for error_message in errors:
-            print(f"- {error_message}")
+    result = result_for_file(path)
+    report = build_report("file", [result])
+    if as_json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print_text_report(report)
+    if is_read_error(result):
+        return 2
+    return 0 if result["passed"] else 1
+
+
+def validate_fixtures_dir(path: Path, as_json: bool) -> int:
+    if not path.exists() or not path.is_dir():
+        error = f"Could not read fixtures directory: {path}"
+        if as_json:
+            report = build_report(
+                "fixtures",
+                [
+                    {
+                        "path": str(path),
+                        "expected": "unknown",
+                        "valid": False,
+                        "passed": False,
+                        "errors": [error],
+                    }
+                ],
+            )
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+        else:
+            print(error, file=sys.stderr)
+        return 2
+
+    fixture_paths = sorted(p for p in path.rglob("*.md") if p.is_file())
+    if not fixture_paths:
+        result = {
+            "path": str(path),
+            "expected": "unknown",
+            "valid": False,
+            "passed": False,
+            "errors": ["No Markdown fixtures found."],
+        }
+        report = build_report("fixtures", [result])
+        if as_json:
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+        else:
+            print_text_report(report)
         return 1
 
-    print(f"Validation passed: {args.output}")
-    return 0
+    results = [
+        result_for_file(p, expected_from_path(p), enforce_fixture_name=True)
+        for p in fixture_paths
+    ]
+    report = build_report("fixtures", results)
+    if as_json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print_text_report(report)
+    if any(is_read_error(result) for result in results):
+        return 2
+    return 0 if report["summary"]["failed"] == 0 else 1
+
+
+def main() -> int:
+    args = parse_args()
+    if args.output:
+        return validate_output_file(Path(args.output), args.json)
+    return validate_fixtures_dir(Path(args.fixtures_dir), args.json)
 
 
 if __name__ == "__main__":
