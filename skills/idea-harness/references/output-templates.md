@@ -2,13 +2,46 @@
 
 Use these templates exactly enough to keep the structure stable. Keep the wording plain and short.
 
-## Non-Execution Template
+## Blocked Template
 
-Use this when State is `Blocked`, `Draftable`, or `Contract-Ready`.
+Use this when State is `Blocked`. Do not include `Requirement Contract` or `Final AI Execution Prompt`.
 
 ```markdown
 ## Idea Control Status
-State: Blocked / Draftable / Contract-Ready
+State: Blocked
+Reason: ...
+
+## Evidence Ledger
+| Field | Status | User Evidence | Risk |
+|---|---|---|---|
+| Goal | ... | "..." | ... |
+| Primary user | ... | ... | ... |
+| Usage scenario | ... | ... | ... |
+| Core workflow | ... | ... | ... |
+| MVP must-haves | ... | ... | ... |
+| Explicit non-goals | ... | ... | ... |
+| Data persistence | ... | ... | ... |
+| Input/output | ... | ... | ... |
+| Acceptance criteria | ... | ... | ... |
+
+## Blocking Unknowns
+- [NEEDS CLARIFICATION] ...
+
+## Assumption Firewall
+AI 不得假设：
+- ...
+
+## Next Best Question
+...
+```
+
+## Draft Or Contract Template
+
+Use this when State is `Draftable` or `Contract-Ready`. Any unconfirmed contract field must be `[NEEDS CLARIFICATION]`.
+
+```markdown
+## Idea Control Status
+State: Draftable / Contract-Ready
 Reason: ...
 
 ## Evidence Ledger

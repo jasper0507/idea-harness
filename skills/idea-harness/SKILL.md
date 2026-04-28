@@ -41,9 +41,9 @@ Idea Harness 是需求阶段的 AI 控制面。它把用户的一句话想法转
 
 | State | Allowed output |
 |---|---|
-| `Blocked` | 当前理解、Evidence Ledger、Blocking Unknowns、Assumption Firewall、1 个 Next Best Question |
-| `Draftable` | 需求草图、Evidence Ledger、Assumption Firewall、最多 3 个问题 |
-| `Contract-Ready` | 需求契约草案、验收标准草案、最后确认请求或最后阻塞问题 |
+| `Blocked` | 当前理解、Evidence Ledger、Blocking Unknowns、Assumption Firewall、1 个 Next Best Question；不得输出 Requirement Contract |
+| `Draftable` | 需求草图、Evidence Ledger、Assumption Firewall、最多 3 个问题；如输出 Requirement Contract 草案，未确认字段必须写 `[NEEDS CLARIFICATION]` |
+| `Contract-Ready` | 需求契约草案、验收标准草案、最后确认请求或最后阻塞问题；未确认字段必须写 `[NEEDS CLARIFICATION]` |
 | `Execution-Ready` | 最终需求契约、验收标准、Assumption Firewall、Final AI Execution Prompt |
 
 ## Next Best Question Priority
@@ -65,7 +65,7 @@ Use the template in `references/output-templates.md`. Keep this order:
 3. `Blocking Unknowns`
 4. `Assumption Firewall`
 5. `Next Best Question`
-6. `Requirement Contract`
+6. `Requirement Contract` only when `State = Draftable`, `Contract-Ready`, or `Execution-Ready`; omit it when `State = Blocked`
 7. `Final AI Execution Prompt` only when `State = Execution-Ready`
 
 If the user asks to skip clarification and start coding, still apply the Execution Gate. If the gate fails, explain the blocker and ask the next best question instead of generating an implementation prompt.

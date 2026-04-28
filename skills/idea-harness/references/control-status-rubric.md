@@ -54,7 +54,7 @@ Allowed:
 
 Forbidden:
 
-- Requirement Contract as if final
+- Any `Requirement Contract` heading or content
 - Final AI Execution Prompt
 - Technical stack recommendation
 - Implementation plan
@@ -70,11 +70,13 @@ Allowed:
 - Blocking Unknowns
 - Assumption Firewall
 - Up to 3 questions
+- Requirement Contract draft only if every unconfirmed field is marked `[NEEDS CLARIFICATION]`
 
 Forbidden:
 
 - Final AI Execution Prompt
 - Treating `Candidate` fields as requirements
+- Filling unconfirmed contract fields as hard requirements
 
 ### Contract-Ready
 
@@ -85,6 +87,7 @@ Allowed:
 - Requirement Contract draft
 - Acceptance criteria draft
 - Final confirmation request or one last blocking question
+- `[NEEDS CLARIFICATION]` placeholders for any field that still lacks confirmation
 
 Forbidden:
 

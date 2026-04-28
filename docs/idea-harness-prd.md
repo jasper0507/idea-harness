@@ -173,15 +173,19 @@ idea-harness/
     examples.md
 ```
 
-V2 可选增强：
+工程化版本加入：
 
 ```text
 idea-harness/
   scripts/
-    validate_contract.py
+    validate_output.py
+  tests/
+    idea-harness/
+      test_validate_output.py
+      fixtures/
 ```
 
-V1 不需要脚本。初始产品应是一个规则清晰、示例充分的 Markdown Skill。只有当输出结构不稳定时，再加入结构校验脚本。
+Markdown Skill 仍保持轻量；可执行脚本只校验输出结构和门禁规则，不接管语义判断。
 
 ### 6.2 SKILL.md 职责
 
@@ -261,9 +265,9 @@ Idea Harness 使用状态门禁，而不是 AI 自信程度。
 
 | 状态 | 含义 | 允许输出 |
 |---|---|---|
-| `Blocked` | 想法太模糊，或存在高风险缺失项 | 当前理解、Evidence Ledger 摘要、Assumption Firewall、1 个下一问 |
-| `Draftable` | 基本方向存在，但执行仍会要求 AI 猜测 | 需求草图、最多 2 到 3 个问题、禁止假设项 |
-| `Contract-Ready` | 可以生成需求契约草案，但最终执行前仍需确认 | 需求契约草案、验收标准草案、明确确认请求 |
+| `Blocked` | 想法太模糊，或存在高风险缺失项 | 当前理解、Evidence Ledger 摘要、Assumption Firewall、1 个下一问；不输出 Requirement Contract |
+| `Draftable` | 基本方向存在，但执行仍会要求 AI 猜测 | 需求草图、最多 2 到 3 个问题、禁止假设项；如输出契约草案，未确认字段必须写 `[NEEDS CLARIFICATION]` |
+| `Contract-Ready` | 可以生成需求契约草案，但最终执行前仍需确认 | 需求契约草案、验收标准草案、明确确认请求；未确认字段必须写 `[NEEDS CLARIFICATION]` |
 | `Execution-Ready` | 无阻塞未知项 | 最终需求契约、最终 AI 执行 Prompt、验收标准、假设防火墙 |
 
 ### 7.4.1 状态转换规则
@@ -271,12 +275,12 @@ Idea Harness 使用状态门禁，而不是 AI 自信程度。
 使用以下规则保证状态转换可预测：
 
 ```text
-如果 Goal 是 Missing 或 Conflict -> Blocked
-否则如果 Primary user 是 Missing -> Blocked
-否则如果 Core workflow 是 Missing -> 最多 Draftable
-否则如果 MVP must-haves 或 V1 non-goals 是 Missing -> 最多 Draftable
-否则如果 data persistence 相关且 Missing -> 最多 Contract-Ready
-否则如果 Acceptance criteria 是 Missing -> 最多 Contract-Ready
+如果 Goal 不是 Confirmed -> Blocked
+否则如果 Primary user 不是 Confirmed -> Blocked
+否则如果 Core workflow 不是 Confirmed -> 最多 Draftable
+否则如果 MVP must-haves 或 V1 non-goals 不是 Confirmed -> 最多 Draftable
+否则如果 data persistence 相关且不是 Confirmed -> 最多 Contract-Ready
+否则如果 Acceptance criteria 不是 Confirmed -> 最多 Contract-Ready
 否则 -> Execution-Ready
 ```
 
@@ -305,7 +309,7 @@ Idea Harness 不做清晰度量化评估。是否允许进入下一阶段，只�
 
 规则：
 
-- 任一门禁项缺失，不能进入 `Execution-Ready`。
+- 任一门禁项不是 `Confirmed`，不能进入 `Execution-Ready`。
 - AI 推测的 Candidate 不能通过门禁。
 - 用户未确认的功能不能进入最终执行 Prompt。
 - 技术栈不是 V1 门禁项，除非用户主动提出技术约束。
@@ -348,7 +352,7 @@ Idea Harness 不做清晰度量化评估。是否允许进入下一阶段，只�
 
 ```markdown
 ## Idea Control Status
-State: Blocked / Draftable / Contract-Ready / Execution-Ready
+State: Blocked
 Reason: ...
 
 ## Evidence Ledger
@@ -365,6 +369,28 @@ AI 不得假设：
 
 ## Next Best Question
 ...
+```
+
+`Blocked` 状态必须停在澄清阶段，不输出 `Requirement Contract`，也不输出 `Final AI Execution Prompt`。
+
+`Draftable`、`Contract-Ready` 和 `Execution-Ready` 可以使用以下契约结构；其中 `Draftable` 和 `Contract-Ready` 的未确认字段必须写 `[NEEDS CLARIFICATION]`，不能写成硬需求。
+
+```markdown
+## Idea Control Status
+State: Draftable / Contract-Ready / Execution-Ready
+Reason: ...
+
+## Evidence Ledger
+| Field | Status | User Evidence | Risk |
+|---|---|---|---|
+| Goal | ... | "..." | ... |
+
+## Blocking Unknowns
+- ...
+
+## Assumption Firewall
+AI 不得假设：
+- ...
 
 ## Requirement Contract
 Goal:
@@ -475,19 +501,24 @@ D. 学习时间和打卡
 - 确认每个 `Confirmed` 字段都有用户证据。
 - 确认 Assumption Firewall 覆盖常见危险假设。
 
-### 阶段 2：轻量结构校验脚本
+### 阶段 2：轻量输出校验脚本
 
-只有当 V1 输出格式不稳定时再添加。
+当 Skill 开始承担 harness 门禁职责后，必须加入可执行校验，避免输出规则只停留在人工 review。
 
 交付：
 
-- `scripts/validate_contract.py`
+- `scripts/validate_output.py`
+- `tests/idea-harness/test_validate_output.py`
+- `tests/idea-harness/fixtures/*.md`
 
 脚本职责：
 
 - 检查必要标题是否存在。
 - 检查非 `Execution-Ready` 状态下是否错误输出了 `Final AI Execution Prompt`。
-- 检查 Evidence Ledger 每行是否有状态。
+- 检查 `Execution-Ready` 状态下是否缺少 `Final AI Execution Prompt`。
+- 检查 `Blocked` 状态是否错误输出了 `Requirement Contract`。
+- 检查 Evidence Ledger 中 `Confirmed` 行是否有用户证据。
+- 检查未确认字段是否被写入最终执行 Prompt 的硬需求。
 - 检查 Assumption Firewall 是否存在。
 - 检查 `Execution-Ready` 状态是否包含验收标准。
 

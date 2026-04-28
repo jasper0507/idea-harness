@@ -17,7 +17,7 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 - `Core workflow`, `MVP must-haves`, `Explicit non-goals`, and `Acceptance criteria` are `Missing`.
 - Assumption Firewall forbids assuming task manager, course schedule, note app, login, database, charts, AI features, or deployment.
 - Asks exactly one next question, preferably about what learning content the user wants to manage first.
-- Does not output `Final AI Execution Prompt`.
+- Does not output `Requirement Contract` or `Final AI Execution Prompt`.
 
 ## Scenario 2: Expense Tracker
 
@@ -33,7 +33,7 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 - `Goal` can be `Confirmed` from "记录每天花了多少钱".
 - The skill exposes missing user, workflow, data retention, MVP boundary, non-goals, and acceptance criteria instead of assuming them.
 - Assumption Firewall forbids assuming login, database, charts, budget alerts, multi-user sharing, payment integration, mobile app, or cloud sync.
-- Does not output `Final AI Execution Prompt`.
+- Does not output `Requirement Contract` or `Final AI Execution Prompt`.
 
 ## Scenario 3: Material Organizer Without Persistence
 
@@ -65,7 +65,7 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 - Data persistence can be `Confirmed` from "下次打开还能看到以前写的内容".
 - Acceptance criteria can be `Confirmed` from "新增一篇、看到列表、点开旧日记".
 - The skill should ask about what V1 explicitly will not do, not about framework or deployment.
-- Does not output `Final AI Execution Prompt`.
+- Does not output `Requirement Contract` or `Final AI Execution Prompt`.
 
 ## Scenario 5: Execution-Ready Small Tool
 
@@ -97,4 +97,4 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 - Data persistence is `Conflict`.
 - Blocking Unknowns explicitly mention the conflict between "不要保存任何数据" and "下次打开还能看到所有以前的日记".
 - Next Best Question asks the user to choose whether diary content should be kept after closing.
-- Does not output `Final AI Execution Prompt`.
+- Does not output `Requirement Contract` or `Final AI Execution Prompt`.

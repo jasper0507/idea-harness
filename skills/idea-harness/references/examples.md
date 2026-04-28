@@ -47,17 +47,9 @@ B. 作业和截止日期
 C. 学习笔记或资料
 D. 学习时间和打卡
 
-## Requirement Contract
-Goal: [NEEDS CLARIFICATION]
-Primary user: [NEEDS CLARIFICATION]
-Core scenario: [NEEDS CLARIFICATION]
-MVP must-haves: [NEEDS CLARIFICATION]
-V1 non-goals: [NEEDS CLARIFICATION]
-Data behavior: [NEEDS CLARIFICATION]
-Acceptance criteria: [NEEDS CLARIFICATION]
 ```
 
-Do not include `Final AI Execution Prompt`.
+Do not include `Requirement Contract` or `Final AI Execution Prompt`.
 
 ## Example 2: Contract-Ready But Missing Acceptance
 

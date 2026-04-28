@@ -20,6 +20,8 @@ idea-harness/
     plugin.json
   docs/
     idea-harness-prd.md
+  scripts/
+    validate_output.py
   skills/
     idea-harness/
       SKILL.md
@@ -32,6 +34,8 @@ idea-harness/
         examples.md
   tests/
     idea-harness/
+      test_validate_output.py
+      fixtures/
       manual-scenarios.md
 ```
 
@@ -52,6 +56,8 @@ Run the structural checks:
 ```powershell
 python -m json.tool .codex-plugin/plugin.json
 python -X utf8 C:/Users/12694/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/idea-harness
+python -X utf8 -m unittest tests.idea-harness.test_validate_output
+python -X utf8 scripts/validate_output.py --output tests/idea-harness/fixtures/valid-blocked.md
 ```
 
-Then review `tests/idea-harness/manual-scenarios.md` against the Skill behavior.
+Then review `tests/idea-harness/manual-scenarios.md` against the Skill behavior for semantic coverage.
