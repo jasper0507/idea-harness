@@ -51,7 +51,7 @@ Run the structural checks:
 
 ```powershell
 python -m json.tool .codex-plugin/plugin.json
-python C:/Users/12694/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/idea-harness
+python -X utf8 C:/Users/12694/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/idea-harness
 ```
 
 Then review `tests/idea-harness/manual-scenarios.md` against the Skill behavior.

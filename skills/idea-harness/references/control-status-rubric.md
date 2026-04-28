@@ -13,7 +13,7 @@ Use this rubric to decide the current Idea Control Status. The state is determin
 
 ## Blocking Gates
 
-The following fields block final execution when `Missing` or `Conflict`:
+The following fields unlock final execution only when `Confirmed`. `Candidate`, `Missing`, and `Conflict` all block `Execution-Ready`:
 
 - Goal
 - Primary user
@@ -28,13 +28,13 @@ The following fields block final execution when `Missing` or `Conflict`:
 Apply these rules in order:
 
 ```text
-If Goal is Missing or Conflict -> Blocked
-Else if Primary user is Missing or Conflict -> Blocked
-Else if Core workflow is Missing or Conflict -> at most Draftable
-Else if MVP must-haves is Missing or Conflict -> at most Draftable
-Else if Explicit non-goals is Missing or Conflict -> at most Draftable
-Else if Data persistence is relevant and Missing or Conflict -> at most Contract-Ready
-Else if Acceptance criteria is Missing or Conflict -> at most Contract-Ready
+If Goal is not Confirmed -> Blocked
+Else if Primary user is not Confirmed -> Blocked
+Else if Core workflow is not Confirmed -> at most Draftable
+Else if MVP must-haves is not Confirmed -> at most Draftable
+Else if Explicit non-goals is not Confirmed -> at most Draftable
+Else if Data persistence is relevant and not Confirmed -> at most Contract-Ready
+Else if Acceptance criteria is not Confirmed -> at most Contract-Ready
 Else -> Execution-Ready
 ```
 

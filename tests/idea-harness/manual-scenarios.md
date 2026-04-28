@@ -29,7 +29,7 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 
 **Expected**
 
-- State is `Blocked` or `Draftable`, depending on whether the answer contains enough user/workflow evidence.
+- State is `Blocked` because `Primary user` is not confirmed.
 - `Goal` can be `Confirmed` from "记录每天花了多少钱".
 - The skill exposes missing user, workflow, data retention, MVP boundary, non-goals, and acceptance criteria instead of assuming them.
 - Assumption Firewall forbids assuming login, database, charts, budget alerts, multi-user sharing, payment integration, mobile app, or cloud sync.
@@ -45,7 +45,7 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 
 **Expected**
 
-- State is at most `Draftable` if acceptance criteria or explicit workflow remains incomplete.
+- State is at most `Contract-Ready` when only acceptance criteria remain unconfirmed; if core workflow is incomplete, state is at most `Draftable`.
 - Confirmed fields must quote user evidence such as "粘贴一段资料" and "不需要保存历史".
 - Data persistence is `Confirmed` as no history needed.
 - The skill must not assume file upload, database, AI model choice, folders, tags, collaboration, or export formats.

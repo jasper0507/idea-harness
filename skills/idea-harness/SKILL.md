@@ -1,6 +1,6 @@
 ---
 name: idea-harness
-description: Use when Codex is helping a non-programmer clarify a fuzzy idea for a small website, tool, or app before planning, coding, or generating an implementation prompt.
+description: Use when Codex is helping a non-programmer clarify a fuzzy idea for a small website, tool, or app before planning, coding, or generating an implementation prompt, including Chinese requests about 澄清需求、小应用想法、模糊想法、需求契约.
 ---
 
 # Idea Harness
