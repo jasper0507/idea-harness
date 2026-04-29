@@ -1,34 +1,13 @@
-## Idea Control Status
-State: Draftable
-Reason: Goal and primary user are confirmed, but workflow, scope, storage, and acceptance still need clarification.
+## 当前结论
+Status: Need More Info
+Reason: 目标和使用者已经清楚，但第一版流程、范围、保存行为和验收标准还需要确认。
 
-## Evidence Ledger
-| Field | Status | User Evidence | Risk |
-|---|---|---|---|
-| Goal | Confirmed | "Build a simple study planner." | Low |
-| Primary user | Confirmed | "For my own study sessions." | Low |
-| Core workflow | Candidate | "Plan study tasks for a week." | Medium |
-| MVP must-haves | Missing | None | High |
-| Explicit non-goals | Missing | None | High |
-| Data persistence | Candidate | "Maybe save it on this computer." | Medium |
-| Acceptance criteria | Missing | None | High |
+## 已确认
+- 用户想做一个简单学习计划工具。
+- 主要给用户自己安排学习使用。
 
-## Blocking Unknowns
-- [NEEDS CLARIFICATION] Confirm the first workflow the planner must support.
-- [NEEDS CLARIFICATION] Confirm what must be included in the first version.
-- [NEEDS CLARIFICATION] Confirm whether study plans need to be saved after refresh.
+## 不能先假设
+- 不能假设它需要账号、云同步、提醒、统计、协作、手机 App、日历或部署方案。
 
-## Assumption Firewall
-AI must not assume accounts, cloud sync, reminders, analytics, collaboration, mobile apps, calendars, or deployment.
-
-## Next Best Question
-Which first workflow matters most: making a weekly task list, tracking today's sessions, or reviewing completed study time?
-
-## Requirement Contract
-Goal: Build a simple study planner.
-Primary user: The user, for personal study sessions.
-Core scenario: [NEEDS CLARIFICATION]
-MVP must-haves: [NEEDS CLARIFICATION]
-V1 non-goals: [NEEDS CLARIFICATION]
-Data behavior: [NEEDS CLARIFICATION]
-Acceptance criteria: [NEEDS CLARIFICATION]
+## 下一步
+第一版你最想先支持哪件事：做一周学习任务清单、跟踪今天的学习安排，还是回顾已经完成的学习时间？

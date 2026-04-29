@@ -6,7 +6,9 @@ from pathlib import Path
 
 
 VALID_STATES = {"Blocked", "Draftable", "Contract-Ready", "Execution-Ready"}
+PUBLIC_STATUSES = {"Need More Info", "Ready"}
 FINAL_PROMPT = "Final AI Execution Prompt"
+PUBLIC_PROMPT = "执行 Prompt"
 REQUIREMENT_CONTRACT = "Requirement Contract"
 ASSUMPTION_FIREWALL = "Assumption Firewall"
 NEXT_BEST_QUESTION = "Next Best Question"
@@ -15,6 +17,24 @@ BASIC_HEADINGS = {
     "Evidence Ledger",
     "Blocking Unknowns",
     ASSUMPTION_FIREWALL,
+}
+PUBLIC_BASIC_HEADINGS = {
+    "当前结论",
+    "已确认",
+    "不能先假设",
+}
+PUBLIC_HEADING_NAMES = {
+    "当前结论": "current status",
+    "已确认": "confirmed facts",
+    "不能先假设": "forbidden assumptions",
+    "下一步": "next step",
+    PUBLIC_PROMPT: "public execution prompt",
+}
+PUBLIC_NEXT_STEP = "下一步"
+LEGACY_PUBLIC_HEADINGS = BASIC_HEADINGS | {
+    REQUIREMENT_CONTRACT,
+    FINAL_PROMPT,
+    NEXT_BEST_QUESTION,
 }
 
 EXECUTION_GATE_FIELDS = {
@@ -35,6 +55,36 @@ CONTRACT_FIELD_MAP = {
     "Explicit non-goals": "V1 non-goals",
     "Data persistence": "Data behavior",
     "Acceptance criteria": "Acceptance criteria",
+}
+PUBLIC_GATE_FIELD_MAP = {
+    "目标": "Goal",
+    "使用者": "Primary user",
+    "核心流程": "Core workflow",
+    "第一版必须有": "MVP must-haves",
+    "第一版不做": "Explicit non-goals",
+    "数据保存": "Data persistence",
+    "验收标准": "Acceptance criteria",
+}
+PUBLIC_PROMPT_REQUIREMENT_LABELS = (
+    "目标",
+    "使用者",
+    "核心流程",
+    "第一版必须有",
+    "第一版不做",
+    "数据保存",
+)
+PUBLIC_PROMPT_SECTION_LABELS = {
+    "已确认需求",
+    "验收标准",
+    "禁止假设",
+    "Acceptance criteria",
+    "Assumption Firewall",
+    "不能先假设",
+}
+UNCONFIRMED_MARKERS = {
+    "[NEEDS CLARIFICATION]",
+    "待确认",
+    "未确认",
 }
 
 
@@ -86,6 +136,17 @@ def parse_state(text: str) -> str | None:
     return match.group(1) if match else None
 
 
+def parse_public_status(text: str) -> str | None:
+    match = re.search(r"^Status:\s*(.+?)\s*$", text, re.MULTILINE)
+    return match.group(1) if match else None
+
+
+def uses_light_format(text: str) -> bool:
+    return bool(parse_public_status(text)) or any(
+        has_heading(text, heading) for heading in PUBLIC_BASIC_HEADINGS
+    )
+
+
 def parse_ledger_rows(text: str) -> list[dict[str, str]]:
     ledger = section_text(text, "Evidence Ledger")
     rows: list[dict[str, str]] = []
@@ -118,6 +179,10 @@ def evidence_is_missing(evidence: str) -> bool:
     return normalized in {"", "none", "n/a", "na", "[needs clarification]"}
 
 
+def has_unconfirmed_marker(text: str) -> bool:
+    return any(marker in text for marker in UNCONFIRMED_MARKERS)
+
+
 def count_questions(text: str) -> int:
     return sum(1 for line in text.splitlines() if "?" in line or "？" in line)
 
@@ -128,7 +193,142 @@ def field_label_appears(section: str, field: str) -> bool:
     )
 
 
-def validate(text: str) -> list[str]:
+def parse_public_confirmed_items(text: str) -> dict[str, str]:
+    confirmed = section_text(text, "已确认")
+    items: dict[str, str] = {}
+
+    for line in confirmed.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("-"):
+            continue
+
+        content = stripped.lstrip("-").strip()
+        if "：" in content:
+            label, value = content.split("：", 1)
+        elif ":" in content:
+            label, value = content.split(":", 1)
+        else:
+            continue
+
+        items[label.strip()] = value.strip()
+
+    return items
+
+
+def prompt_has_confirmed_requirements(prompt_section: str) -> bool:
+    if "已确认需求" not in prompt_section:
+        return False
+
+    return all(
+        re.search(
+            rf"^\s*[-*]\s*{re.escape(label)}\s*[：:][^\S\r\n]*\S",
+            prompt_section,
+            re.MULTILINE,
+        )
+        for label in PUBLIC_PROMPT_REQUIREMENT_LABELS
+    )
+
+
+def normalize_prompt_label(line: str) -> str:
+    return line.strip().rstrip("：:").strip()
+
+
+def prompt_section_has_list_item(prompt_section: str, labels: set[str]) -> bool:
+    in_section = False
+
+    for line in prompt_section.splitlines():
+        stripped = line.strip()
+        normalized = normalize_prompt_label(stripped)
+
+        if normalized in labels:
+            in_section = True
+            continue
+
+        if in_section and normalized in PUBLIC_PROMPT_SECTION_LABELS:
+            return False
+
+        if in_section and re.search(r"^\s*[-*]\s*\S", line):
+            return True
+
+    return False
+
+
+def validate_light(text: str) -> list[str]:
+    errors: list[str] = []
+    status = parse_public_status(text)
+
+    if not status:
+        errors.append("Missing public status.")
+    elif status not in PUBLIC_STATUSES:
+        errors.append(f"Unknown public status: {status}.")
+
+    for heading in sorted(PUBLIC_BASIC_HEADINGS):
+        if not has_heading(text, heading):
+            errors.append(f"Output must include {PUBLIC_HEADING_NAMES[heading]}.")
+
+    for heading in sorted(LEGACY_PUBLIC_HEADINGS):
+        if has_heading(text, heading):
+            errors.append(f"Light output must not expose legacy heading: {heading}.")
+
+    has_public_prompt = has_heading(text, PUBLIC_PROMPT)
+
+    if status == "Need More Info":
+        if has_public_prompt:
+            errors.append(
+                "Need More Info output must not include public execution prompt."
+            )
+
+        next_step = section_text(text, PUBLIC_NEXT_STEP)
+        if not next_step:
+            errors.append("Need More Info output must include next step.")
+        else:
+            question_count = count_questions(next_step)
+            if question_count != 1:
+                errors.append(
+                    "Need More Info output must include exactly 1 next question; "
+                    f"found {question_count}."
+                )
+
+    if status == "Ready":
+        if not has_public_prompt:
+            errors.append("Ready output must include public execution prompt.")
+        if has_heading(text, PUBLIC_NEXT_STEP):
+            errors.append("Ready output must not include next step.")
+
+        confirmed_items = parse_public_confirmed_items(text)
+        for label, field in PUBLIC_GATE_FIELD_MAP.items():
+            value = confirmed_items.get(label)
+            if value is None:
+                errors.append(f"Ready output missing confirmed field: {field}.")
+            elif evidence_is_missing(value):
+                errors.append(f"Confirmed item has no user evidence: {field}.")
+            elif has_unconfirmed_marker(value):
+                errors.append(f"Confirmed item is still marked unconfirmed: {field}.")
+
+    confirmed_section = section_text(text, "已确认")
+    prompt_section = section_text(text, PUBLIC_PROMPT)
+    if status == "Ready" and has_unconfirmed_marker(confirmed_section + prompt_section):
+        errors.append("Ready output must not include unconfirmed markers.")
+
+    if status == "Ready" and has_public_prompt and not prompt_section:
+        errors.append("Ready execution prompt must not be empty.")
+
+    if status == "Ready" and prompt_section:
+        if not prompt_has_confirmed_requirements(prompt_section):
+            errors.append("Prompt must include confirmed requirements.")
+        if not prompt_section_has_list_item(
+            prompt_section, {"验收标准", "Acceptance criteria"}
+        ):
+            errors.append("Prompt must include acceptance criteria.")
+        if not prompt_section_has_list_item(
+            prompt_section, {"禁止假设", "Assumption Firewall", "不能先假设"}
+        ):
+            errors.append("Prompt must include forbidden assumptions.")
+
+    return errors
+
+
+def validate_legacy(text: str) -> list[str]:
     errors: list[str] = []
     state = parse_state(text)
     rows = parse_ledger_rows(text)
@@ -218,6 +418,12 @@ def validate(text: str) -> list[str]:
                 )
 
     return errors
+
+
+def validate(text: str) -> list[str]:
+    if uses_light_format(text):
+        return validate_light(text)
+    return validate_legacy(text)
 
 
 def expected_from_path(path: Path) -> str:

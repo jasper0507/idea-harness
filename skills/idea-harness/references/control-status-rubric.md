@@ -1,6 +1,15 @@
 # Control Status Rubric
 
-Use this rubric to decide the current Idea Control Status. The state is determined by blocking gates, not by confidence.
+Use this rubric to decide the internal Idea Control Status. The state is determined by blocking gates, not by confidence.
+
+Do not expose these internal states to ordinary users by default. Map them to the public statuses:
+
+| Internal state | Public status |
+|---|---|
+| `Blocked` | `Need More Info` |
+| `Draftable` | `Need More Info` |
+| `Contract-Ready` | `Need More Info` |
+| `Execution-Ready` | `Ready` |
 
 ## Evidence States
 
@@ -38,7 +47,46 @@ Else if Acceptance criteria is not Confirmed -> at most Contract-Ready
 Else -> Execution-Ready
 ```
 
-## Allowed Outputs By State
+## Allowed User-Facing Outputs
+
+### Need More Info
+
+Use whenever the internal state is `Blocked`, `Draftable`, or `Contract-Ready`.
+
+Allowed:
+
+- `当前结论`
+- `已确认`
+- `不能先假设`
+- Exactly 1 `下一步` question
+
+Forbidden:
+
+- `执行 Prompt`
+- Internal audit headings such as `Evidence Ledger`, `Blocking Unknowns`, `Assumption Firewall`, and `Requirement Contract`
+- Technical stack recommendation
+- Implementation plan
+
+### Ready
+
+Use only when the internal state is `Execution-Ready`.
+
+Allowed:
+
+- `当前结论`
+- `已确认`
+- `不能先假设`
+- `执行 Prompt`
+
+Required:
+
+- Every hard requirement in the prompt must map to confirmed user evidence.
+- The prompt must include V1 non-goals and forbidden assumptions.
+- The prompt must include observable acceptance criteria.
+
+## Internal Allowed Outputs By State
+
+Use this section only when the user explicitly asks for the audit view or when maintaining tests and internal documentation.
 
 ### Blocked
 

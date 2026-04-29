@@ -1,6 +1,6 @@
 # Evidence Ledger Template
 
-The Evidence Ledger is the source of truth. Do not let plausible guesses become confirmed requirements.
+The Evidence Ledger is the internal source of truth. Use it to reason, but do not expose the table to ordinary users unless they explicitly ask for the audit view. Do not let plausible guesses become confirmed requirements.
 
 ## Fields
 
@@ -45,18 +45,18 @@ Data persistence blocks only when the idea involves user-entered content, record
 | "下次打开还能看到" | Data persistence | `Confirmed` |
 | "不要保存任何数据" and "下次打开还能看到所有日记" | Data persistence | `Conflict` |
 
-## Requirement Contract Fields
+## Public Confirmed Fields
 
-When enough evidence exists, map ledger fields into this contract:
+When enough evidence exists, map ledger fields into the public `已确认` section:
 
 ```markdown
-Goal:
-Primary user:
-Core scenario:
-MVP must-haves:
-V1 non-goals:
-Data behavior:
-Acceptance criteria:
+- 目标：...
+- 使用者：...
+- 核心流程：...
+- 第一版必须有：...
+- 第一版不做：...
+- 数据保存：...
+- 验收标准：...
 ```
 
-Only confirmed fields can be stated as hard requirements. If a contract draft is allowed but not final, mark unconfirmed fields with `[NEEDS CLARIFICATION]`.
+Only confirmed fields can be stated as hard requirements. If a field is not confirmed, keep the public status as `Need More Info` and ask one next question instead of showing a partially filled contract.

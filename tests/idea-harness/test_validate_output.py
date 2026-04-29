@@ -66,6 +66,16 @@ class ValidateOutputTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Validation passed", result.stdout)
 
+    def test_accepts_light_need_more_info_output(self) -> None:
+        result = run_validator("valid-light-need-more-info.md")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_accepts_light_ready_output(self) -> None:
+        result = run_validator("valid-light-ready.md")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_accepts_valid_conflict_output_without_final_prompt(self) -> None:
         result = run_validator("valid-conflict-no-final-prompt.md")
 
@@ -92,6 +102,15 @@ class ValidateOutputTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("must not include Final AI Execution Prompt", result.stdout)
 
+    def test_rejects_light_need_more_info_prompt(self) -> None:
+        result = run_validator("invalid-light-need-more-info-prompt.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(
+            "Need More Info output must not include public execution prompt",
+            result.stdout,
+        )
+
     def test_rejects_blocked_requirement_contract(self) -> None:
         result = run_validator("invalid-blocked-contract.md")
 
@@ -116,11 +135,59 @@ class ValidateOutputTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("Final prompt must include acceptance criteria", result.stdout)
 
+    def test_rejects_light_ready_without_acceptance_criteria(self) -> None:
+        result = run_validator("invalid-light-ready-no-acceptance.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Prompt must include acceptance criteria", result.stdout)
+
     def test_rejects_execution_ready_missing_gate_field(self) -> None:
         result = run_validator("invalid-execution-ready-missing-gate.md")
 
         self.assertEqual(result.returncode, 1)
         self.assertIn("missing execution gate field", result.stdout)
+
+    def test_rejects_light_ready_missing_gate_field(self) -> None:
+        result = run_validator("invalid-light-ready-missing-gate.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Ready output missing confirmed field", result.stdout)
+
+    def test_rejects_light_ready_with_next_step(self) -> None:
+        result = run_validator("invalid-light-ready-with-next-step.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Ready output must not include next step", result.stdout)
+
+    def test_rejects_light_ready_without_confirmed_requirements(self) -> None:
+        result = run_validator("invalid-light-ready-no-confirmed-requirements.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Prompt must include confirmed requirements", result.stdout)
+
+    def test_rejects_light_ready_empty_prompt(self) -> None:
+        result = run_validator("invalid-light-ready-empty-prompt.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Ready execution prompt must not be empty", result.stdout)
+
+    def test_rejects_light_ready_empty_requirement_values(self) -> None:
+        result = run_validator("invalid-light-ready-empty-requirement-values.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Prompt must include confirmed requirements", result.stdout)
+
+    def test_rejects_light_ready_empty_acceptance_section(self) -> None:
+        result = run_validator("invalid-light-ready-empty-acceptance-section.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Prompt must include acceptance criteria", result.stdout)
+
+    def test_rejects_light_ready_empty_assumptions_section(self) -> None:
+        result = run_validator("invalid-light-ready-empty-assumptions-section.md")
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Prompt must include forbidden assumptions", result.stdout)
 
     def test_rejects_unconfirmed_contract_field_without_placeholder(self) -> None:
         result = run_validator("invalid-contract-unconfirmed-field.md")

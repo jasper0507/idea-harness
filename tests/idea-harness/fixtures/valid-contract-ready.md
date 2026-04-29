@@ -1,35 +1,17 @@
-## Idea Control Status
-State: Contract-Ready
-Reason: The requirement contract can be drafted, but acceptance criteria still need confirmation.
+## 当前结论
+Status: Need More Info
+Reason: 资料整理工具的目标、使用者、流程和不做内容已经清楚，但还缺可判断的完成标准。
 
-## Evidence Ledger
-| Field | Status | User Evidence | Risk |
-|---|---|---|---|
-| Goal | Confirmed | "只给自己用的资料整理工具" | Low |
-| Primary user | Confirmed | "只给自己用" | Low |
-| Usage scenario | Confirmed | "粘贴一段文字" | Low |
-| Core workflow | Confirmed | "粘贴一段文字，它帮我整理成标题、摘要和待办" | Low |
-| MVP must-haves | Confirmed | "整理成标题、摘要和待办" | Low |
-| Explicit non-goals | Confirmed | "不做登录、不保存历史、不上传文件" | Low |
-| Data persistence | Confirmed | "不保存历史" | Low |
-| Input/output | Confirmed | "粘贴一段文字" and "标题、摘要和待办" | Low |
-| Acceptance criteria | Missing | None | High |
+## 已确认
+- 目标：做一个只给自己用的资料整理工具。
+- 使用者：用户自己。
+- 核心流程：粘贴一段文字，整理成标题、摘要和待办。
+- 第一版必须有：标题、摘要和待办。
+- 第一版不做：登录、保存历史、上传文件。
+- 数据保存：不保存历史。
 
-## Blocking Unknowns
-- [NEEDS CLARIFICATION] Confirm how the user will judge the整理 result is usable.
+## 不能先假设
+- 不能假设它需要登录、历史记录、文件上传、数据库、导出、文件夹、标签或部署方案。
 
-## Assumption Firewall
-AI 不得假设：
-- Login, history storage, file upload, database, export, folders, tags, or deployment.
-
-## Next Best Question
+## 下一步
 你会怎样判断整理结果已经可用？
-
-## Requirement Contract
-Goal: Build a personal material organizer.
-Primary user: The user.
-Core scenario: Paste text and receive title, summary, and todos.
-MVP must-haves: Title, summary, and todos.
-V1 non-goals: Login, history storage, and file upload.
-Data behavior: No history storage.
-Acceptance criteria: [NEEDS CLARIFICATION]

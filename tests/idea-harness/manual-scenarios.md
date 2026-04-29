@@ -1,6 +1,6 @@
 # Idea Harness Manual Scenarios
 
-Use these scenarios to manually pressure-test `$idea-harness`. The expected behavior is intentionally narrow: the skill should control requirement readiness, not expand the idea into product design or code.
+Use these scenarios to manually pressure-test `$idea-harness`. The expected behavior is intentionally light: the skill should control requirement readiness without exposing an audit report.
 
 ## Scenario 1: Learning Management
 
@@ -12,12 +12,12 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 
 **Expected**
 
-- State is `Blocked`.
-- `Goal` is at most `Candidate`, not `Confirmed`, because "学习管理" is too broad.
-- `Core workflow`, `MVP must-haves`, `Explicit non-goals`, and `Acceptance criteria` are `Missing`.
-- Assumption Firewall forbids assuming task manager, course schedule, note app, login, database, charts, AI features, or deployment.
+- Public status is `Need More Info`.
+- The response has `当前结论`, `已确认`, `不能先假设`, and `下一步`.
+- `已确认` says only that the user wants a learning management site; it does not pretend the product type is known.
+- `不能先假设` forbids task manager, course schedule, note app, login, database, charts, AI features, or deployment.
 - Asks exactly one next question, preferably about what learning content the user wants to manage first.
-- Does not output `Requirement Contract` or `Final AI Execution Prompt`.
+- Does not output `执行 Prompt`.
 
 ## Scenario 2: Expense Tracker
 
@@ -29,11 +29,10 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 
 **Expected**
 
-- State is `Blocked` because `Primary user` is not confirmed.
-- `Goal` can be `Confirmed` from "记录每天花了多少钱".
-- The skill exposes missing user, workflow, data retention, MVP boundary, non-goals, and acceptance criteria instead of assuming them.
-- Assumption Firewall forbids assuming login, database, charts, budget alerts, multi-user sharing, payment integration, mobile app, or cloud sync.
-- Does not output `Requirement Contract` or `Final AI Execution Prompt`.
+- Public status is `Need More Info` because the primary user and first-version boundary are not confirmed.
+- `已确认` can mention "记录每天花了多少钱".
+- The skill exposes missing decisions through one next question instead of assuming login, database, charts, budget alerts, sharing, payment integration, mobile app, or cloud sync.
+- Does not output `执行 Prompt`.
 
 ## Scenario 3: Material Organizer Without Persistence
 
@@ -45,11 +44,10 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 
 **Expected**
 
-- State is at most `Contract-Ready` when only acceptance criteria remain unconfirmed; if core workflow is incomplete, state is at most `Draftable`.
-- Confirmed fields must quote user evidence such as "粘贴一段资料" and "不需要保存历史".
-- Data persistence is `Confirmed` as no history needed.
-- The skill must not assume file upload, database, AI model choice, folders, tags, collaboration, or export formats.
-- Does not output `Final AI Execution Prompt` unless acceptance criteria and all blocking gates are also confirmed by the user.
+- Public status is `Need More Info` if acceptance criteria remain unconfirmed.
+- `已确认` quotes or paraphrases only confirmed facts such as paste text, output title/summary/todos, personal use, no account, no history.
+- `不能先假设` forbids file upload, folders, tags, collaboration, export formats, database, or AI model choice unless confirmed.
+- Does not output `执行 Prompt` unless acceptance criteria and all blocking gates are also confirmed by the user.
 
 ## Scenario 4: Diary Website Missing Non-Goals
 
@@ -61,13 +59,12 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 
 **Expected**
 
-- State is at most `Draftable` because `Explicit non-goals` is missing.
-- Data persistence can be `Confirmed` from "下次打开还能看到以前写的内容".
-- Acceptance criteria can be `Confirmed` from "新增一篇、看到列表、点开旧日记".
-- The skill should ask about what V1 explicitly will not do, not about framework or deployment.
-- Does not output `Requirement Contract` or `Final AI Execution Prompt`.
+- Public status is `Need More Info` because first-version non-goals are missing.
+- `已确认` can mention daily diary writing, persistence, and acceptance criteria.
+- The next question asks what V1 explicitly will not do, not framework or deployment.
+- Does not output `执行 Prompt`.
 
-## Scenario 5: Execution-Ready Small Tool
+## Scenario 5: Ready Small Tool
 
 **Input**
 
@@ -77,10 +74,9 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 
 **Expected**
 
-- State is `Execution-Ready`.
-- All blocking gates are `Confirmed` with direct user evidence.
-- Final requirement contract only includes confirmed requirements.
-- `Final AI Execution Prompt` is allowed and must include acceptance criteria plus Assumption Firewall.
+- Public status is `Ready`.
+- `已确认` includes goal, user, workflow, must-haves, non-goals, data behavior, and acceptance criteria.
+- `执行 Prompt` is allowed and must include acceptance criteria plus forbidden assumptions.
 - The prompt must not add login, storage, analytics, sound, notifications, task lists, or deployment unless user evidence exists.
 
 ## Scenario 6: Conflicting Request
@@ -93,8 +89,7 @@ Use these scenarios to manually pressure-test `$idea-harness`. The expected beha
 
 **Expected**
 
-- State is `Blocked`.
-- Data persistence is `Conflict`.
-- Blocking Unknowns explicitly mention the conflict between "不要保存任何数据" and "下次打开还能看到所有以前的日记".
-- Next Best Question asks the user to choose whether diary content should be kept after closing.
-- Does not output `Requirement Contract` or `Final AI Execution Prompt`.
+- Public status is `Need More Info`.
+- `当前结论` names the conflict between "不要保存任何数据" and "下次打开还能看到所有以前的日记".
+- `下一步` asks the user to choose whether diary content should be kept after closing.
+- Does not output `执行 Prompt`.

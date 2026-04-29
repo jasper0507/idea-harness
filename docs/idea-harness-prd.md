@@ -4,7 +4,7 @@
 
 **产品名称：** Idea Harness
 
-**一句话定位：** Idea Harness 是一个面向非程序员的轻量需求 Harness Skill。它帮助想用 AI 做小网站、小工具、小应用的人，把模糊想法转成有证据、有边界、可确认、可验收的需求契约，并在需求不够清楚时阻止 AI 过早进入开发计划或代码实现。
+**一句话定位：** Idea Harness 是一个面向非程序员的轻量小应用想法澄清 Skill。它帮助想用 AI 做小网站、小工具、小应用的人，用最少的公开输出确认目标、边界和验收标准，并在信息不够时阻止 AI 过早进入开发计划或代码实现。
 
 **目标用户：** 不会编程、不会写需求、不会写产品文档，但有一个想法并希望借助 AI 做出小网站、小工具或小应用的人。
 
@@ -19,7 +19,7 @@
 
 **核心问题：** 普通 AI 虽然也会追问，但追问过程不稳定，容易在用户没有确认的情况下默认登录、数据库、数据统计、AI 功能、多用户、部署方案或复杂架构。Idea Harness 要解决的不是“把 prompt 写长”，而是“在需求阶段阻止 AI 乱猜和乱做”。
 
-**核心承诺：** Idea Harness 不把用户的模糊想法伪装成完整需求。它记录已知内容，暴露未知内容，拦截危险假设，提出当前最高价值的问题，并且只有在需求达到可控状态后，才输出最终 AI 执行 Prompt。
+**核心承诺：** Idea Harness 不把用户的模糊想法伪装成完整需求。它在内部记录证据、拦截危险假设、判断执行门禁；对用户只暴露必要结论、已确认内容、不能假设的内容，以及一个下一步问题或最终执行 Prompt。
 
 ## 2. 参考模型与借鉴模式
 
@@ -116,8 +116,9 @@ Idea Harness 不能被包装成另一个 Prompt 优化器、PRD 生成器，或�
 - 面向小网站、小工具、小应用的需求澄清。
 - 面向不懂编程概念的用户。
 - 使用轻量 Markdown Skill 实现。
-- 支持状态输出：`Blocked`、`Draftable`、`Contract-Ready`、`Execution-Ready`。
-- 支持证据账本、假设防火墙、执行门禁、需求契约、最终执行 Prompt。
+- 对用户只暴露两个公开状态：`Need More Info` 和 `Ready`。
+- 内部仍支持状态判断：`Blocked`、`Draftable`、`Contract-Ready`、`Execution-Ready`。
+- 支持内部证据账本、假设防火墙、执行门禁，以及公开的 `Need More Info` / `Ready` 输出。
 - 提供常见非程序员想法的示例。
 
 ### 4.2 V1 范围外
@@ -140,8 +141,8 @@ Idea Harness 不能被包装成另一个 Prompt 优化器、PRD 生成器，或�
 3. 生成 Evidence Ledger。
 4. 找出阻塞未知项和危险假设。
 5. 判断当前控制状态。
-6. 根据状态，提出下一问或生成需求契约。
-7. 当需求达到 `Execution-Ready`，生成最终 AI 执行 Prompt、验收标准和禁止假设项。
+6. 根据状态，提出下一问或生成公开执行 Prompt。
+7. 当内部需求达到 `Execution-Ready`，公开状态变为 `Ready`，生成执行 Prompt、验收标准和禁止假设项。
 
 ### 5.2 语气要求
 
@@ -249,7 +250,7 @@ V1 的 Evidence Ledger 评估以下字段：
 | Input/output | 用户输入什么，得到什么 |
 | Acceptance criteria | 用户如何判断它做成了 |
 
-命名约定：Evidence Ledger 必须使用 `Explicit non-goals` 作为门禁字段名；Requirement Contract 可以把同一概念渲染为更面向产品的 `V1 non-goals`。
+命名约定：Evidence Ledger 内部使用 `Explicit non-goals` 作为门禁字段名；公开输出把同一概念渲染为更面向用户的 `第一版不做`。
 
 技术栈不是 V1 必填字段，因为目标用户是非程序员。
 
@@ -269,14 +270,14 @@ V1 中，以下字段缺失或冲突时，禁止生成最终执行 Prompt：
 
 ### 7.4 控制状态
 
-Idea Harness 使用状态门禁，而不是 AI 自信程度。
+Idea Harness 内部使用四状态门禁，而不是 AI 自信程度；对用户只映射为 `Need More Info` 或 `Ready`。
 
-| 状态 | 含义 | 允许输出 |
+| 内部状态 | 含义 | 公开状态 |
 |---|---|---|
-| `Blocked` | 想法太模糊，或存在高风险缺失项 | 当前理解、Evidence Ledger 摘要、Assumption Firewall、1 个下一问；不输出 Requirement Contract |
-| `Draftable` | 基本方向存在，但执行仍会要求 AI 猜测 | 需求草图、最多 2 到 3 个问题、禁止假设项；如输出契约草案，未确认字段必须写 `[NEEDS CLARIFICATION]` |
-| `Contract-Ready` | 可以生成需求契约草案，但最终执行前仍需确认 | 需求契约草案、验收标准草案、明确确认请求；未确认字段必须写 `[NEEDS CLARIFICATION]` |
-| `Execution-Ready` | 无阻塞未知项 | 最终需求契约、最终 AI 执行 Prompt、验收标准、假设防火墙 |
+| `Blocked` | 想法太模糊，或存在高风险缺失项 | `Need More Info` |
+| `Draftable` | 基本方向存在，但执行仍会要求 AI 猜测 | `Need More Info` |
+| `Contract-Ready` | 可以生成需求契约草案，但最终执行前仍需确认 | `Need More Info` |
+| `Execution-Ready` | 无阻塞未知项 | `Ready` |
 
 ### 7.4.1 状态转换规则
 
@@ -351,74 +352,77 @@ Idea Harness 不做清晰度量化评估。是否允许进入下一阶段，只�
 4. 生成 Assumption Firewall。
 5. 按下一问选择规则确定最关键问题。
 6. 按状态转换规则确定当前状态。
-7. 只输出当前状态允许的内容。
+7. 把内部状态映射为公开状态，只输出轻量公开内容。
 ```
 
 顺序很重要。Skill 不能先写最终 Prompt，再回头补证据。
 
 ### 8.1 标准输出模板
 
+公开输出只使用两个状态：`Need More Info` 和 `Ready`。
+
+非 Ready 状态统一使用：
+
 ```markdown
-## Idea Control Status
-State: Blocked
+## 当前结论
+Status: Need More Info
 Reason: ...
 
-## Evidence Ledger
-| Field | Status | User Evidence | Risk |
-|---|---|---|---|
-| Goal | ... | "..." | ... |
-
-## Blocking Unknowns
+## 已确认
 - ...
 
-## Assumption Firewall
-AI 不得假设：
+## 不能先假设
 - ...
 
-## Next Best Question
+## 下一步
 ...
 ```
 
-`Blocked` 状态必须停在澄清阶段，不输出 `Requirement Contract`，也不输出 `Final AI Execution Prompt`。
+`Need More Info` 必须停在澄清阶段，不输出 `执行 Prompt`。它只问一个下一步问题。
 
-`Draftable`、`Contract-Ready` 和 `Execution-Ready` 可以使用以下契约结构；其中 `Draftable` 和 `Contract-Ready` 的未确认字段必须写 `[NEEDS CLARIFICATION]`，不能写成硬需求。
+Ready 状态使用：
 
 ```markdown
-## Idea Control Status
-State: Draftable / Contract-Ready / Execution-Ready
-Reason: ...
+## 当前结论
+Status: Ready
+Reason: 目标、使用者、流程、第一版范围、不做内容、数据行为和验收标准都已确认。
 
-## Evidence Ledger
-| Field | Status | User Evidence | Risk |
-|---|---|---|---|
-| Goal | ... | "..." | ... |
+## 已确认
+- 目标：...
+- 使用者：...
+- 核心流程：...
+- 第一版必须有：...
+- 第一版不做：...
+- 数据保存：...
+- 验收标准：...
 
-## Blocking Unknowns
+## 不能先假设
 - ...
 
-## Assumption Firewall
-AI 不得假设：
+## 执行 Prompt
+你将基于以下已确认需求实现一个小网站/小工具/小应用。只实现用户确认过的内容，不要加入“不能先假设”中的功能。
+
+已确认需求：
+- 目标：...
+- 使用者：...
+- 核心流程：...
+- 第一版必须有：...
+- 第一版不做：...
+- 数据保存：...
+
+验收标准：
+- 当 ... 时，系统应该 ...
+
+禁止假设：
 - ...
-
-## Requirement Contract
-Goal:
-Primary user:
-Core scenario:
-MVP must-haves:
-V1 non-goals:
-Data behavior:
-Acceptance criteria:
-
-## Final AI Execution Prompt
-仅当 State = Execution-Ready 时输出本节。
 ```
+
+内部的 `Evidence Ledger`、`Blocking Unknowns`、`Assumption Firewall`、`Requirement Contract` 和四状态门禁只用于判断与测试，不默认展示给普通用户。
 
 ### 8.2 提问规则
 
-- `Blocked` 状态只问 1 个问题。
-- `Draftable` 状态最多问 3 个问题。
-- `Contract-Ready` 状态应请求确认，或解决最后一个阻塞项。
-- `Execution-Ready` 状态不继续提问，除非用户改变范围。
+- `Need More Info` 状态只问 1 个问题。
+- `Ready` 状态不继续提问，除非用户改变范围。
 - 面向非技术用户时，优先使用选择题。
 - 每个问题必须降低阻塞未知项或高风险假设。
 - 问题应按下一问选择规则提出，而不是按模板顺序机械提出。
@@ -463,25 +467,17 @@ Acceptance criteria:
 ### V1 预期输出形态
 
 ```markdown
-## Idea Control Status
-State: Blocked
-Reason: 目标过宽，用户想管理的学习对象尚未确认。
+## 当前结论
+Status: Need More Info
+Reason: “管理学习”还太宽，最容易跑偏的是先管理哪类学习内容。
 
-## Evidence Ledger
-| Field | Status | User Evidence | Risk |
-|---|---|---|---|
-| Goal | Candidate | "管理学习" | High |
-| Primary user | Candidate | 可能是个人使用，但用户未明确 | Medium |
-| Core workflow | Missing | None | High |
-| MVP must-haves | Missing | None | High |
-| Explicit non-goals | Missing | None | High |
-| Data persistence | Missing | None | Medium |
-| Acceptance criteria | Missing | None | High |
+## 已确认
+- 用户想做一个“管理学习的网站”。
 
-## Assumption Firewall
-AI 不得假设它是任务管理器、课程表、背单词工具、资料库、打卡工具、登录产品或数据库产品。
+## 不能先假设
+- 不能假设它是任务管理器、课程表、背单词工具、资料库、打卡工具、登录产品、数据库产品或图表看板。
 
-## Next Best Question
+## 下一步
 你最想先管理哪一类学习内容？
 A. 每天要做的学习任务
 B. 作业和截止日期
@@ -507,7 +503,7 @@ D. 学习时间和打卡
 - 至少测试 5 个模糊输入。
 - 确认存在阻塞未知项时，Skill 不输出最终执行 Prompt。
 - 确认每个 `Confirmed` 字段都有用户证据。
-- 确认 Assumption Firewall 覆盖常见危险假设。
+- 确认 `不能先假设` 覆盖常见危险假设。
 
 ### 阶段 2：轻量输出校验脚本
 
@@ -521,14 +517,13 @@ D. 学习时间和打卡
 
 脚本职责：
 
-- 检查必要标题是否存在。
-- 检查非 `Execution-Ready` 状态下是否错误输出了 `Final AI Execution Prompt`。
-- 检查 `Execution-Ready` 状态下是否缺少 `Final AI Execution Prompt`。
-- 检查 `Blocked` 状态是否错误输出了 `Requirement Contract`。
-- 检查 Evidence Ledger 中 `Confirmed` 行是否有用户证据。
-- 检查未确认字段是否被写入最终执行 Prompt 的硬需求。
-- 检查 Assumption Firewall 是否存在。
-- 检查 `Execution-Ready` 状态是否包含验收标准。
+- 检查轻量公开标题是否存在：`当前结论`、`已确认`、`不能先假设`。
+- 检查 `Need More Info` 状态下是否错误输出了 `执行 Prompt`。
+- 检查 `Need More Info` 状态是否只问 1 个下一步问题。
+- 检查 `Ready` 状态下是否缺少 `执行 Prompt`。
+- 检查 `Ready` 状态下是否缺少目标、使用者、核心流程、第一版必须有、第一版不做、数据保存和验收标准。
+- 检查 `Ready` 输出中是否仍包含 `[NEEDS CLARIFICATION]`、`待确认` 或 `未确认`。
+- 检查 `Ready` 的 `执行 Prompt` 是否包含验收标准和禁止假设。
 - 支持 `--output` 单文件校验。
 - 支持 `--fixtures-dir` 批量校验 `valid-*.md` 和 `invalid-*.md`。
 - 支持 `--json` 输出机器可读报告，包含 `mode`、`summary` 和 `results`。
@@ -544,9 +539,9 @@ D. 学习时间和打卡
 交付：
 
 - 3 组前后对比示例对话。
-- 1 张展示 `Blocked` 状态的截图。
-- 1 张展示 `Evidence Ledger + Assumption Firewall` 的截图。
-- 1 张展示 `Execution-Ready` 最终 Prompt 的截图。
+- 1 张展示 `Need More Info` 轻量澄清状态的截图。
+- 1 张展示 `不能先假设` 如何拦截危险扩展的截图。
+- 1 张展示 `Ready` 状态下 `执行 Prompt` 的截图。
 - 一段强调“需求阶段 AI 控制面”的作品简介。
 
 ## 11. 成功指标
@@ -556,26 +551,27 @@ V1 成功标准：
 - 模糊想法不会立刻产出最终编码 Prompt。
 - 相比普通 AI 闲聊，Skill 问的问题更少但更关键。
 - 已确认需求必须引用用户证据。
-- 未确认猜测不能进入需求契约。
+- 未确认猜测不能进入 `已确认` 或 `执行 Prompt`。
 - 只有阻塞未知项解决后，才输出最终执行 Prompt。
+- 普通用户默认不需要阅读 Evidence Ledger、门禁表或内部状态。
 - 非程序员能看懂每个问题，不需要技术背景。
 
 ## 12. 风险与缓解
 
 | 风险 | 缓解 |
 |---|---|
-| AI 编造证据 | 要求引用用户原话；没有证据就标记 Missing |
-| AI 试图绕过门禁 | 阻塞未知项未解决时，禁止输出最终执行 Prompt |
-| Skill 变得太重 | V1 保持 Markdown-only，细节放 references |
-| 用户被问题压垮 | Blocked 状态只问 1 个问题 |
-| 看起来像普通 PRD 工具 | 强调 Evidence Ledger、Assumption Firewall、Execution Gate |
+| AI 编造证据 | 内部要求引用用户原话；没有证据就标记 Missing |
+| AI 试图绕过门禁 | 阻塞未知项未解决时，禁止输出 `执行 Prompt` |
+| Skill 变得太重 | 公开输出只保留当前结论、已确认、不能先假设、下一步或执行 Prompt |
+| 用户被问题压垮 | `Need More Info` 状态只问 1 个问题 |
+| 看起来像普通 PRD 工具 | 强调轻量澄清和执行门禁，不默认展示内部审计结构 |
 | 验收标准变虚 | 使用 EARS / Gherkin 行为模板 |
 
 ## 13. 产品叙事
 
 普通 AI 帮用户扩展想法。Idea Harness 帮用户控制想法。
 
-这个产品的核心洞察是：非程序员不需要一个更重的 PRD 生成器，而需要一个安全的需求阶段，让 AI 在没有证据时不能偷偷填空。Idea Harness 把用户的话变成证据，把缺失信息变成可见阻塞项，把 AI 的猜测挡在假设防火墙之外，然后才允许生成执行 Prompt。
+这个产品的核心洞察是：非程序员不需要一个更重的 PRD 生成器，而需要一个轻量、安全的需求入口，让 AI 在没有证据时不能偷偷填空。Idea Harness 在内部把用户的话变成证据、把缺失信息变成阻塞项、把 AI 的猜测挡在假设防火墙之外；对用户则只展示必要结论和下一步。
 
 因此，Idea Harness 应被描述为：
 
@@ -594,7 +590,7 @@ Superpowers 是一套面向 AI 编程代理的完整软件开发方法论，覆�
 | 核心定位 | 软件开发工作流方法论 | 需求阶段 Harness / AI 输入控制面 |
 | 使用时机 | 已准备进入设计、计划或实现阶段 | 用户只有模糊想法，尚不能安全进入设计或开发 |
 | 目标用户 | 会和 AI 协作开发的工程用户或高阶使用者 | 不懂编程、不懂 PRD、只会描述想法的普通用户 |
-| 主要产物 | 设计文档、实施计划、测试与代码执行流程 | Evidence Ledger、Assumption Firewall、Requirement Contract、最终执行 Prompt |
+| 主要产物 | 设计文档、实施计划、测试与代码执行流程 | 当前结论、已确认内容、不能先假设、下一步问题或执行 Prompt |
 | 风险控制点 | 防止 AI 乱写代码、跳过测试、实现失控 | 防止 AI 在需求阶段偷偷补全、过早规划、错误假设 |
 | 问题风格 | 面向功能、架构、实现、测试的设计澄清 | 面向目标、使用者、场景、MVP 边界、数据行为的生活化澄清 |
 | 成功标准 | 开发过程可执行、可测试、可验证 | 需求输入有证据、有边界、无阻塞未知项 |
@@ -604,7 +600,7 @@ Superpowers 是一套面向 AI 编程代理的完整软件开发方法论，覆�
 - 当用户连“自己到底要做什么”都没有说清时，Superpowers 的设计和计划能力会过早介入。
 - Superpowers 会追求形成设计文档和实施计划，而 Idea Harness 会先判断 AI 是否有资格继续往下生成。
 - 非程序员不需要一开始就面对架构、文件、测试、分支、实现计划；他们需要先把目标、边界和验收说清。
-- Idea Harness 把 AI 的猜测显式隔离为 `Candidate`，并通过 Assumption Firewall 阻止这些猜测进入最终执行 Prompt。
+- Idea Harness 在内部把 AI 的猜测隔离为 `Candidate`，并阻止这些猜测进入公开的 `执行 Prompt`。
 - Idea Harness 的最终产物可以交给 Superpowers、Codex、Claude Code 或其他 AI 编程工具继续执行，因此它是前置入口，而不是后续开发框架。
 
 推荐协作链路：
@@ -612,7 +608,7 @@ Superpowers 是一套面向 AI 编程代理的完整软件开发方法论，覆�
 ```text
 模糊想法
 -> Idea Harness
--> Requirement Contract + Final AI Execution Prompt
+-> Ready 状态下的执行 Prompt
 -> Superpowers brainstorming / writing-plans
 -> 实施、测试、验证
 ```
@@ -630,7 +626,7 @@ Idea Harness 的竞品不只是某一个 Skill，而是几类相邻工具：
 | 需求清晰度 Skill | Requirements Clarity、ask-questions-if-underspecified | 发现需求不清，追问用户，阻止错误执行 | 高 | Idea Harness 不使用分数机制，不追求完整 PRD，而是用证据、假设防火墙和执行门禁控制 AI 能否继续 |
 | PRD 生成器 | PRD Generator、PRD Creator MCP、MakePRD | 把想法生成标准 PRD、用户故事、技术规格 | 中高 | Idea Harness 的第一目标不是“生成一份文档”，而是判断哪些内容还不能被写进最终执行 Prompt |
 | 规格驱动开发框架 | GitHub Spec Kit、Agent OS | 让规格成为开发源头，再生成计划和代码 | 中 | Idea Harness 只处理规格形成前的模糊想法入口，尤其面向非程序员和小工具场景 |
-| 任务编排 / Task Master 类 | Task Master、PRD-Taskmaster | 把 PRD 拆成任务、依赖、执行计划 | 中 | Idea Harness 不拆任务、不管进度，只负责产出更可信的前置需求契约 |
+| 任务编排 / Task Master 类 | Task Master、PRD-Taskmaster | 把 PRD 拆成任务、依赖、执行计划 | 中 | Idea Harness 不拆任务、不管进度，只负责产出更可信的前置执行输入 |
 | Agentic Agile 框架 | BMad Method | 多角色 agent 共同产出 PRD、架构、故事、代码 | 中 | Idea Harness 更轻，不引入团队角色、架构阶段和复杂流程；适合一个普通用户的一句话想法 |
 | 专家咨询 MCP | AI Expert Workflow MCP | 调用产品、UX、架构等专家角色进行咨询和文档生成 | 中 | Idea Harness 不强调专家角色，而强调证据绑定、未知项暴露和禁止假设 |
 | Prompt 工程指南 | 面向非技术用户的 Prompt 教程 | 教用户如何写更好的 Prompt | 低中 | Idea Harness 不要求用户学会 Prompt 工程，而是让 Skill 代替用户约束 AI |

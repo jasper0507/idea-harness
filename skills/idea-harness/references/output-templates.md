@@ -1,119 +1,66 @@
 # Output Templates
 
-Use these templates exactly enough to keep the structure stable. Keep the wording plain and short.
+Use these templates for user-facing responses. Keep the wording short, plain, and non-technical.
 
-## Blocked Template
+Do not expose internal audit headings such as `Evidence Ledger`, `Blocking Unknowns`, `Assumption Firewall`, `Requirement Contract`, or `Final AI Execution Prompt` unless the user explicitly asks for the internal audit view.
 
-Use this when State is `Blocked`. Do not include `Requirement Contract` or `Final AI Execution Prompt`.
+## Need More Info Template
+
+Use this whenever the idea is not internally `Execution-Ready`. Ask exactly one next question.
 
 ```markdown
-## Idea Control Status
-State: Blocked
+## 当前结论
+Status: Need More Info
 Reason: ...
 
-## Evidence Ledger
-| Field | Status | User Evidence | Risk |
-|---|---|---|---|
-| Goal | ... | "..." | ... |
-| Primary user | ... | ... | ... |
-| Usage scenario | ... | ... | ... |
-| Core workflow | ... | ... | ... |
-| MVP must-haves | ... | ... | ... |
-| Explicit non-goals | ... | ... | ... |
-| Data persistence | ... | ... | ... |
-| Input/output | ... | ... | ... |
-| Acceptance criteria | ... | ... | ... |
-
-## Blocking Unknowns
-- [NEEDS CLARIFICATION] ...
-
-## Assumption Firewall
-AI 不得假设：
+## 已确认
 - ...
 
-## Next Best Question
+## 不能先假设
+- ...
+
+## 下一步
 ...
 ```
 
-## Draft Or Contract Template
+Rules:
 
-Use this when State is `Draftable` or `Contract-Ready`. Any unconfirmed contract field must be `[NEEDS CLARIFICATION]`.
+- Do not include `执行 Prompt`.
+- Keep `已确认` limited to direct user evidence.
+- Put risky guesses in `不能先假设`, not in requirements.
+- Ask one question only. Prefer 2-4 concrete choices when helpful.
 
-```markdown
-## Idea Control Status
-State: Draftable / Contract-Ready
-Reason: ...
+## Ready Template
 
-## Evidence Ledger
-| Field | Status | User Evidence | Risk |
-|---|---|---|---|
-| Goal | ... | "..." | ... |
-| Primary user | ... | ... | ... |
-| Usage scenario | ... | ... | ... |
-| Core workflow | ... | ... | ... |
-| MVP must-haves | ... | ... | ... |
-| Explicit non-goals | ... | ... | ... |
-| Data persistence | ... | ... | ... |
-| Input/output | ... | ... | ... |
-| Acceptance criteria | ... | ... | ... |
-
-## Blocking Unknowns
-- [NEEDS CLARIFICATION] ...
-
-## Assumption Firewall
-AI 不得假设：
-- ...
-
-## Next Best Question
-...
-
-## Requirement Contract
-Goal:
-Primary user:
-Core scenario:
-MVP must-haves:
-V1 non-goals:
-Data behavior:
-Acceptance criteria:
-```
-
-Do not include the `Final AI Execution Prompt` heading in non-execution states.
-
-## Execution-Ready Template
-
-Use this only when every blocking gate is `Confirmed`.
+Use this only when every execution gate is confirmed by user evidence.
 
 ```markdown
-## Idea Control Status
-State: Execution-Ready
-Reason: 所有执行门禁都有用户证据。
+## 当前结论
+Status: Ready
+Reason: 目标、使用者、流程、第一版范围、不做内容、数据行为和验收标准都已确认。
 
-## Evidence Ledger
-| Field | Status | User Evidence | Risk |
-|---|---|---|---|
-| Goal | Confirmed | "..." | Low |
+## 已确认
+- 目标：...
+- 使用者：...
+- 核心流程：...
+- 第一版必须有：...
+- 第一版不做：...
+- 数据保存：...
+- 验收标准：...
 
-## Blocking Unknowns
-- None.
-
-## Assumption Firewall
-AI 不得假设：
+## 不能先假设
 - ...
 
-## Requirement Contract
-Goal:
-Primary user:
-Core scenario:
-MVP must-haves:
-V1 non-goals:
-Data behavior:
-Acceptance criteria:
-
-## Final AI Execution Prompt
-你将基于以下已确认需求实现一个小网站/小工具/小应用。只实现用户确认过的内容，不要加入 Assumption Firewall 中禁止的功能。
+## 执行 Prompt
+你将基于以下已确认需求实现一个小网站/小工具/小应用。只实现用户确认过的内容，不要加入“不能先假设”中的功能。
 
 已确认需求：
-- ...
+- 目标：...
+- 使用者：...
+- 核心流程：...
+- 第一版必须有：...
+- 第一版不做：...
+- 数据保存：...
 
 验收标准：
 - 当 ... 时，系统应该 ...
@@ -122,6 +69,13 @@ Acceptance criteria:
 禁止假设：
 - ...
 ```
+
+Rules:
+
+- Every item in `执行 Prompt` must map to a confirmed user statement.
+- Include acceptance criteria under `验收标准`.
+- Include forbidden assumptions under `禁止假设`.
+- Do not include `[NEEDS CLARIFICATION]`, `待确认`, or `未确认` in `Ready` output.
 
 ## Question Style
 
