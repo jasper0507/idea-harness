@@ -1,7 +1,0 @@
-interface:
-  display_name: "Idea Harness"
-  short_description: "轻量澄清小应用想法"
-  default_prompt: "使用 $idea-harness 先轻量澄清我的小应用想法。"
-
-policy:
-  allow_implicit_invocation: true
