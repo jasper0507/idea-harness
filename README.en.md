@@ -22,7 +22,7 @@ It helps the agent:
 
 - Record only facts the user explicitly said or confirmed.
 - Put risky guesses into `Forbidden Assumptions`.
-- Ask one question at a time, choosing the question that best reduces wrong direction.
+- Ask one question at a time, choosing the question that best reduces wrong direction and giving a recommended answer.
 - Stay at `Need More Info` until the scope is clear.
 - Output an `Execution Prompt` only when the first-version boundary is clear enough for the next agent to act on.
 
@@ -64,6 +64,8 @@ A. Daily study tasks
 B. Assignments and deadlines
 C. Study notes or resources
 D. Study time and check-ins
+
+Recommendation: If you are not sure yet, start with A because it is the easiest to narrow into a small first version.
 ```
 
 Only after the goal, user, core flow, V1 must-haves, V1 non-goals, data behavior, and acceptance criteria are confirmed will it move to `Ready` and output an `Execution Prompt` containing only confirmed requirements.
@@ -76,6 +78,7 @@ Use it when:
 - The user is not a programmer and does not know how to write requirements.
 - The user wants a very small first version, not a full product.
 - The agent must avoid adding unconfirmed login, databases, admin panels, AI features, dashboards, deployment, or other heavy assumptions.
+- The user wants to grill an app idea, clarify requirements before code, or turn a fuzzy idea into an AI execution prompt.
 
 Do not use it when:
 
@@ -93,7 +96,7 @@ User idea
   -> Extract confirmed facts
   -> Find missing boundaries
   -> Block risky assumptions
-  -> Ask one key question
+  -> Ask one key question and recommend an answer
   -> Repeat until Ready
   -> Output Execution Prompt
 ```

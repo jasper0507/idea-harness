@@ -1,6 +1,6 @@
 ---
 name: idea-harness
-description: Clarify fuzzy small app ideas for non-programmers before planning or coding. Use when a user has a rough idea for a small website, tool, app, workflow helper, shop/course/community tool, or Chinese requests about 澄清需求、小应用想法、普通人做应用、模糊想法整理, and the agent must avoid inventing requirements.
+description: Clarify or grill fuzzy small app ideas for non-programmers before planning or coding, and turn rough ideas into confirmed requirements or an execution prompt. Use when a user has a rough idea for a small website, tool, app, workflow helper, shop/course/community tool, or asks to clarify/grill an app idea, turn a fuzzy idea into requirements, create an AI execution prompt, 先别写代码, 问清楚需求, 澄清需求, 小应用想法, 普通人做应用, 模糊想法整理, or 变成给 AI 执行的 prompt, and the agent must avoid inventing requirements.
 ---
 
 # Idea Harness
@@ -12,10 +12,12 @@ Clarify requirements for ordinary people with small app ideas. Do not plan code,
 Run this private harness every turn:
 
 1. Extract only facts the user explicitly said or confirmed.
-2. Identify missing gates that would make another AI guess.
+2. Identify the next missing gate that would most likely make another AI guess.
 3. Put risky guesses in `不能先假设` / forbidden assumptions.
-4. Ask the one question that most reduces wrong direction.
-5. Output `Ready` only when every gate is confirmed.
+4. Ask exactly one question that most reduces wrong direction.
+5. Give 2-4 concrete options when useful, then give a `推荐` / `Recommendation`.
+6. If confirmed facts support one option, recommend it. Otherwise recommend the narrowest option that can become a small V1 with the fewest accounts, databases, admin panels, or backend assumptions.
+7. Output `Ready` only when every required gate is confirmed.
 
 Do not expose evidence tables, internal audit notes, or legacy states.
 
@@ -40,13 +42,12 @@ Stay at `Need More Info` until the user has confirmed:
 - V1 non-goals: what the first version will not do.
 - Data behavior: what must be saved or not saved.
 - Acceptance criteria: how the user knows it works.
-- Practical business boundary when relevant: who uses it, what job it handles, key rules, exceptions, non-goals, and done criteria.
 
-For shops, courses, communities, creators, or small business workflows, clarify practical business rules deeply enough to prevent guessing. Do not turn it into pricing, growth, operations, or business-model consulting.
+Use an extra practical business boundary gate only when real-world rules affect V1 scope, such as shops, courses, communities, creators, or small business workflows. In those cases, clarify only the rules needed to prevent guessing: who uses it, what job it handles, key rules, important exceptions, non-goals, and done criteria. Do not turn it into pricing, growth, operations, or business-model consulting.
 
 ## Need More Info Output
 
-Use this when any gate is missing, conflicting, or unclear. Ask exactly one next question, preferably with 2-4 concrete choices. If the user cannot answer, split the question smaller. If statements conflict, ask only about the conflict. If you do not understand an industry term or slang, ask directly. Do not output `执行 Prompt` / `Execution Prompt`.
+Use this when any gate is missing, conflicting, or unclear. Ask exactly one next question, preferably with 2-4 concrete choices. After the choices, include one `推荐` / `Recommendation` line. If there is enough confirmed context, recommend the choice most consistent with it. If not, recommend the narrowest choice that can become a small V1 with the fewest accounts, databases, admin panels, or backend assumptions. If the user cannot answer, split the question smaller. If statements conflict, ask only about the conflict. If you do not understand an industry term or slang, ask directly. Do not output `执行 Prompt` / `Execution Prompt`.
 
 Template:
 
@@ -63,6 +64,8 @@ Reason: ...
 
 ## 下一步
 ...
+
+推荐：...
 ```
 
 ## Ready Output
