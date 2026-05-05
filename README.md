@@ -1,144 +1,125 @@
 # Idea Harness
 
-> **Most vague ideas die in the AI's first round of guessing.**  
-> Idea Harness puts a **harness on AI** right at this step.
+> 一个很窄的 agent skill：把非程序员的一句“小应用想法”，澄清到 AI 可以继续执行、但还没有开始乱猜的程度。
 
-**An ultra-focused Clarification Skill**: turns a non-programmer's vague "small app idea" into requirements that AI can safely execute — **without guessing**.
+大多数小应用不是死在代码，而是死在第一轮脑补。
 
-English | [简体中文](README.zh.md)
-
----
-
-## The Problem
-
-Most AI Coding Agents (Claude Code, Cursor, Codex, etc.) encounter inputs like:
+用户说：
 
 ```text
-I want to build a learning management website.
-I want to make an expense tracking app.
-I want to create a family chore tracker.
+我想做一个学习管理网站。
 ```
 
-They immediately start **guessing**:
-- Account systems, databases, push notifications, analytics dashboards, admin panels...
-- Features and complex architectures you never asked for
+Agent 很容易直接补上账号、课程表、任务看板、数据库、统计图、提醒、权限、部署方案，然后开始实现一个用户并没有要的东西。
 
-Result: **You get something you didn't want**, or the project collapses entirely.
+Idea Harness 做的事很少：在规划和写代码之前，强制 agent 先把目标、使用者、第一版范围和验收标准问清楚。
 
-Andrej Karpathy has pointed out: **LLMs love to make assumptions without confirmation**. Idea Harness is built specifically to address this early-stage pain point.
+## 它解决什么
 
----
+Idea Harness 是给“还没有需求文档的人”用的，不是给已经有 PRD、技术方案或产品路线图的人用的。
 
-## The Solution
+它会帮 agent：
 
-**Idea Harness does one thing** — **requirements clarification**.
+- 只记录用户已经明确说过或确认过的事实。
+- 把危险脑补写进 `不能先假设`。
+- 每次只问一个最能减少跑偏的问题，并给出一个推荐答案。
+- 在范围没清楚前保持 `Need More Info`。
+- 只有在第一版边界足够明确后，才输出可交给下一个 agent 执行的 `执行 Prompt`。
 
-It takes Karpathy's "Think Before Coding" philosophy + Harness Engineering's control loop, and **laser-focuses** them into a lightweight Skill for the earliest stage.
+## 快速使用
 
-Core mechanisms:
-- Only acknowledge facts the user explicitly stated (evidence ledger)
-- Strictly forbid dangerous assumptions
-- Ask exactly **one most critical question** at a time
-- Use `Status: Need More Info` / `Ready` gate control flow
-
----
-
-## Key Differentiators
-
-| Dimension | Idea Harness | Most Other Skills / Agents |
-|-----------|--------------|---------------------------|
-| **Scope** | **Ultra-narrow** — only does clarification | Full pipeline / execution / code generation |
-| **Core Principle** | **No guessing**, only confirmed facts | Encourages creativity, proactively fills in features |
-| **Stage** | **Step 0 when idea is most vague** | After some clarity is already established |
-| **Risk Control** | Very strong (Status gates + boundary protection) | Weaker |
-| **Lightweight** | **Pure Skill**, extremely minimal | Often includes frameworks, tests, multi-file |
-
-**One-line summary**:  
-Others teach AI **how to do it**. Idea Harness teaches AI to **ask first, then do**.
-
----
-
-## Quick Start (30 seconds)
-
-1. Load `skills/idea-harness/SKILL.md` into your Agent (Claude Code, Cursor, or any tool that supports Skills)
-2. Start chatting:
+把这个 skill 目录交给支持 `SKILL.md` 的 agent：
 
 ```text
-Use idea-harness to clarify my small app idea first.
-I want to build [your vague idea].
+skills/idea-harness/SKILL.md
 ```
 
----
+然后这样开始：
 
-## Output Example
+```text
+使用 idea-harness 先澄清我的小应用想法。
+我想做一个学习管理网站。
+```
 
-**Need More Info stage** (typical output):
+你不会马上得到一份厚重需求文档。你会先得到一个判断：现在是否已经清楚到可以继续。
+
+## 输出长什么样
+
+如果信息还不够，它会停在 `Need More Info`：
 
 ```markdown
-## Current Conclusion
+## 当前结论
 Status: Need More Info
-Reason: "Learning management website" is too broad — the most likely thing to get wrong is the core management target.
+Reason: “学习管理网站”还太宽，最容易跑偏的是先管理哪类学习内容。
 
-## Confirmed
-- You want to build a learning management website.
+## 已确认
+- 你想做一个学习管理网站。
 
-## Forbidden Assumptions
-- Cannot assume it needs login, database, course schedules, points system, etc.
+## 不能先假设
+- 不能先假设它是任务管理器、课程表、笔记库、登录产品、数据库产品或图表看板。
 
-## Next Step
-What type of learning content do you want to manage first?
-A. Daily learning tasks to complete
-B. Assignments and deadlines
-C. Study notes and materials
-D. Study time and check-in records
+## 下一步
+你最想先管理哪一类学习内容？
+A. 每天要做的学习任务
+B. 作业和截止日期
+C. 学习笔记或资料
+D. 学习时间和打卡
+
+推荐：如果你还不确定，先选 A，因为它最容易收成一个很小的第一版。
 ```
 
-Only after all key boundaries (goal, user, core flow, V1 scope, non-goals, etc.) are confirmed will it output `Status: Ready`.
+如果目标、使用者、核心流程、第一版必须有、第一版不做、数据保存行为和验收标准都已经确认，它才会进入 `Ready`，并输出一段只包含已确认需求的 `执行 Prompt`。
 
----
+## 什么时候用
 
-## Design Philosophy
+适合这些场景：
 
-- **Narrow is more useful than all-in-one** — specialized for the clarification stage
-- **Ask less, progress more**
-- **Define boundaries first, then let AI implement**
-- Combines **Harness Engineering** (putting reins on AI) + **Karpathy's philosophy** (Think Before Coding)
+- 用户只有一句模糊想法，例如“我想做一个预约小程序”。
+- 用户不是程序员，不知道怎么把想法写成需求。
+- 用户想先做一个很小的第一版，而不是一上来做完整产品。
+- Agent 必须避免主动添加登录、数据库、后台、AI 功能、数据看板、部署等未确认功能。
+- 用户想先别写代码，只想把想法问清楚，或变成给 AI 执行的 prompt。
 
----
+不适合这些场景：
 
-## When to Use
+- 已经有清楚 PRD，只需要拆任务或写代码。
+- 需要选择技术栈、设计架构、建数据库或规划部署。
+- 需要做商业模式、增长、运营、定价或完整产品咨询。
+- 需要把一个简单想法包装成厚重方案。
 
-**Recommended**:
-- You only have a vague idea
-- You're a non-technical person who doesn't know how to turn an idea into requirements
-- You want to build a **tiny but correct** first version
-- You're afraid AI will take over and add unwanted features
+## 工作方式
 
-**Not suitable**:
-- You already have a clear PRD
-- You need to immediately write code or choose a tech stack
-- You need business model planning or full product roadmapping
-
----
-
-## Project Structure
+Idea Harness 内部是一条很轻的 harness loop：
 
 ```text
-skills/
-  idea-harness/
-    SKILL.md          # Core Skill (minimal)
-    EXAMPLES.md       # Real-world usage examples (continuously updated)
+用户想法
+  -> 提取已确认事实
+  -> 找出缺失边界
+  -> 禁止危险假设
+  -> 问一个关键问题，并给推荐答案
+  -> 重复，直到 Ready
+  -> 输出执行 Prompt
 ```
 
-This is a **skill-only** project, kept extremely lightweight. No scripts, no frameworks, no unnecessary features.
+它不会替用户做产品经理式扩写，也不会提前进入工程实现。它的价值在于把“可以猜”的地方挡住，把“必须问”的地方问出来。
 
----
+## 项目结构
 
-## Contributing
+```text
+README.md
+README.en.md
+LICENSE
+skills/
+  idea-harness/
+    SKILL.md
+    EXAMPLES.md
+```
 
-Submit your **real vague ideas + clarification process**, and I'll add them to EXAMPLES.md to help more people.
+这是一个 skill-only 仓库。没有运行时、测试工程、平台 manifest 或安装脚本。
 
----
+## 设计原则
 
-**License**: MIT  
-**Author**: jasper0507
+- 窄一点，比全能更有用。
+- 问少一点，比问全更容易推进。
+- 先定第一版边界，再让 AI 实现。
+- 未确认的功能不是“灵感”，是风险。
