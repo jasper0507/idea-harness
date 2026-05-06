@@ -1,12 +1,16 @@
 # Examples
 
-这些例子展示普通人在没有技术背景的情况下，如何描述一个模糊的小应用想法，以及 Idea Harness 如何一步步把想法变成可以动手做的需求。
+这些例子展示普通人在没有技术背景的情况下，如何把一句模糊的小应用想法，一步一步确认成可交给 AI 执行的清楚需求。
 
-每个例子都从一句模糊的话开始，经过两三轮澄清，最终到达 Ready 状态。例子之间没有先后关系，可以根据实际场景参考。
+v0.4.0 的默认输出保持极简：
+
+- 澄清阶段只展示 `已确认` 和 `下一步`。
+- Ready 阶段只展示 `需求简报`。
+- 只有用户明确要求时，才额外输出 `执行 Prompt`。
 
 ---
 
-## 例1：个人工具 —— 「我想做个记账的东西」
+## 例1：个人工具 - 「我想做个记账的东西」
 
 ### 用户原文
 
@@ -17,30 +21,20 @@
 ### 第1轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: "记账"有很多方向，最容易跑偏的是做成一个功能太多、太复杂的记账 App。
-
 ## 已确认
 - 你想做一个记账的小工具。
-- 使用场景：平时花了钱随手记一下。
-- 核心诉求：不想太麻烦，要简单。
-
-## 不能先假设
-- 不能先假设它需要账号登录。
-- 不能先假设它需要统计图表。
-- 不能先假设它需要预算提醒。
-- 不能先假设它需要支持多个人使用。
+- 使用场景是平时花了钱后随手记一下。
+- 你希望第一版不要太麻烦。
 
 ## 下一步
-你说的"记一下"，记完之后你最想拿这些记录做什么？
+你说的“记一下”，记完之后你最想拿这些记录做什么？
 
 A. 就是存着，偶尔翻翻这个月花了多少
-B. 想看看每个类别（吃饭、交通、买东西）分别花了多少
-C. 想设定一个每月预算，快超了的时候提醒我
-D. 先不想那么多，能记就行
+B. 看每个类别分别花了多少
+C. 设置每月预算，快超了时提醒
+D. 先不想那么多，能记一笔、看到列表就行
 
-推荐：如果你只是想随手记、偶尔看看，选 D 最简单，第一版只做"记一笔、看列表"就够了。
+推荐：先选 D。它最容易收成一个很小的第一版：只做“记一笔”和“看记录列表”。
 ```
 
 ### 用户回答
@@ -52,66 +46,59 @@ D. 先不想那么多，能记就行
 ### 第2轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: 分类记账的方向已确认，但还需要确认数据是否需要保留、用什么设备。
-
 ## 已确认
-- 你想做一个简单的个人记账工具。
-- 核心流程：选分类、填金额、记一笔。
-- 有分类：吃饭、交通等。
-- 第一版不需要统计图表、预算提醒、多人使用。
-
-## 不能先假设
-- 不能先假设它需要注册账号。
-- 不能先假设换设备后数据还在。
-- 不能先假设需要自定义分类。
+- 你想做一个自己用的简单记账工具。
+- 第一版主动作是选分类、填金额、记一笔。
+- 第一版要能看到记过的账目列表。
+- 需要固定分类，比如吃饭、交通。
 
 ## 下一步
-你现在打算在什么设备上用？
+下次打开时，还要不要看到之前记过的账？
 
-A. 手机浏览器
-B. 电脑浏览器
-C. 两个都要，数据要同步
+A. 要，保存在当前这个浏览器里
+B. 不用，每次打开都是空的也可以
+C. 要，换手机或换电脑也能看到
 
-还有，分类是用固定的几个（吃饭、交通、日用品、娱乐），还是要自己随便加？
-
-推荐：如果你只是自己用，先用固定分类、在手机浏览器上用最简单，后面再加功能也不迟。
+推荐：先选 A。它能满足“下次还在”，但不需要账号登录或云同步。
 ```
 
 ### 用户回答
 
 ```text
-手机浏览器吧。分类就固定的那几个，不用自己加。
+选 A。手机浏览器里用就行，分类固定几个，不用自己加。
 ```
 
 ### Ready 输出
 
 ```markdown
-## 当前结论
-Status: Ready
-Reason: 目标用户、核心流程、功能范围、数据行为和验收标准都已确认。
+## 需求简报
+问题：
+- 平时花钱后没有清楚记录，想用一个简单工具随手记账。
 
-## 已确认
-- 目标：做一个自己用的手机浏览器记账工具。
-- 用户：自己，在手机浏览器里使用。
-- 核心流程：打开页面 → 选分类（吃饭、交通、日用品、娱乐）→ 填金额 → 点"记一笔" → 看到自己的记账列表。
-- V1 必须包含：固定分类选择、金额输入、记一笔按钮、记账记录列表。
-- V1 不做：自定义分类、统计图表、预算提醒、账号登录、多人使用、导出功能。
-- 数据行为：数据存在手机本地，换设备或清除浏览器后数据会丢失。
-- 验收标准：能选分类、填金额、记一笔；能看到自己记过的所有账。
+用户：
+- 自己。
 
-## 不能先假设
-- 不能添加账号登录、云同步、统计图表、预算提醒、导出、自定义分类、多设备同步。
+场景：
+- 花钱后打开手机浏览器，选分类并记录一笔支出。
 
-## 验收标准
-- 打开页面能选分类（吃饭、交通、日用品、娱乐）、填金额、点"记一笔"。
-- 记完后能看到自己记过的账目列表。
+第一版主动作：
+- 选择固定分类，填写金额，记一笔，并看到记录列表。
+
+数据行为：
+- 记录保存在当前手机浏览器里；换设备或清除浏览器数据后会丢失。
+
+不做事项：
+- 不做账号登录、云同步、统计图表、预算提醒、导出、自定义分类、多设备同步。
+
+验收标准：
+- 能选固定分类、填写金额并记一笔。
+- 记完后能看到已记录的账目列表。
+- 关闭并重新打开同一手机浏览器后，记录仍然存在。
 ```
 
 ---
 
-## 例2：小生意 —— 「我想开个网店卖手工」
+## 例2：小生意 - 「我想开个网店卖手工」
 
 ### 用户原文
 
@@ -122,29 +109,19 @@ Reason: 目标用户、核心流程、功能范围、数据行为和验收标准
 ### 第1轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: "网上卖手工"涉及很多环节，最容易跑偏的是直接做成一个完整的电商平台。
-
 ## 已确认
-- 你想在网上卖自己做的手工饰品。
-- 起因：朋友觉得好看，想试试看。
-- 阶段：刚开始尝试，还没确定能不能卖出去。
-
-## 不能先假设
-- 不能先假设需要购物车、订单系统、支付对接。
-- 不能先假设需要会员体系、积分、优惠券。
-- 不能先假设需要库存管理、发货跟踪。
-- 不能先假设需要多商家入驻。
+- 你想在网上展示并售卖自己做的手工饰品。
+- 现在还处在刚开始尝试的阶段。
+- 你的第一目标是看看有没有人想买。
 
 ## 下一步
-你打算怎么让买家来买？
+第一版里，买家看到作品后要怎么购买？
 
-A. 把作品展示出来，放个联系方式（微信/手机号），让买家直接联系我下单
-B. 做一个能直接下单付款的店铺，买家自己选、自己付
-C. 先在一个平台（比如小红书、闲鱼）上卖，自己再做一个展示页
+A. 看作品展示页，然后通过微信或手机号联系你
+B. 直接在页面里下单付款
+C. 先跳到小红书、闲鱼等平台再购买
 
-推荐：如果你刚开始试，选 A 最简单——做一个展示页，放作品照片和联系方式，不用处理支付和订单，先验证有没有人想买。
+推荐：先选 A。它最小，不需要购物车、支付和订单系统，适合先验证有没有人想买。
 ```
 
 ### 用户回答
@@ -156,65 +133,60 @@ C. 先在一个平台（比如小红书、闲鱼）上卖，自己再做一个�
 ### 第2轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: 展示页方向已确认，还需确认访问方式和是否需要后台管理。
-
 ## 已确认
-- 你想做一个手工饰品展示页。
-- 核心流程：放作品照片、介绍、微信二维码，买家看到喜欢的直接联系你下单。
-- 每个作品有自己的照片和文字介绍。
-- 不需要购物车、支付、订单系统。
-
-## 不能先假设
-- 不能先假设需要注册登录。
-- 不能先假设需要后台管理界面。
-- 不能先假设需要买家留言功能。
+- 第一版是手工饰品展示页。
+- 买家看作品后通过微信二维码联系你。
+- 每个作品需要照片和文字介绍。
+- 第一版不需要购物车、支付或订单系统。
 
 ## 下一步
-作品的资料（照片、介绍）你想怎么加进去？
+作品资料第一版怎么放进去？
 
-A. 你把资料给我，我帮你写进页面里（每次要改就再找我）
-B. 有一个后台页面，你自己登录后上传照片、写介绍，不用找别人
+A. 你把作品照片和介绍给制作页面的人，由对方写进页面
+B. 你自己登录后台，上传照片和介绍
+C. 买家也可以上传作品或留言
 
-推荐：如果作品还不多（比如 10 件以内），选 A 最简单，不用多做一个后台管理页面。等作品多了再升级也可以。
+推荐：先选 A。现在作品不多时，这样最简单，不需要后台、账号或上传系统。
 ```
 
 ### 用户回答
 
 ```text
-现在就几件作品，选 A 吧，你帮我加进去。以后多了再说。但我希望页面好看一点，有那种手作的温暖感觉。
+选 A，现在就几件作品，你帮我加进去。以后多了再说。但页面希望有手作的温暖感觉。
 ```
 
 ### Ready 输出
 
 ```markdown
-## 当前结论
-Status: Ready
-Reason: 目标、核心流程、功能范围、数据行为和验收标准都已确认。
+## 需求简报
+问题：
+- 想把手工饰品展示给潜在买家，减少只靠聊天介绍作品的麻烦。
 
-## 已确认
-- 目标：做一个手工饰品展示页，用来吸引买家联系你下单。
-- 用户：买家（在手机或电脑浏览器打开链接）。
-- 核心流程：买家打开页面 → 看到作品列表 → 点进每个作品看照片和介绍 → 看到底部微信二维码 → 扫码联系你。
-- V1 必须包含：作品展示列表（每个作品有照片和文字介绍）、作品详情页、微信二维码展示。
-- V1 不做：购物车、支付、订单系统、账号登录、后台管理、买家留言、会员体系、库存管理。
-- 页面风格：有手作温暖感，用柔和的颜色和自然的感觉。
-- 数据行为：作品内容由作者手动添加，不需要用户自己管理。
-- 验收标准：能展示多件作品，每件作品有照片和介绍，底部有微信二维码，买家可以扫码联系。
+用户：
+- 买家通过手机或电脑浏览器访问页面；作者提供作品资料。
 
-## 不能先假设
-- 不能添加购物车、支付、订单、账号登录、后台管理、买家留言、库存、发货、会员体系。
+场景：
+- 买家打开链接，浏览作品列表，查看作品照片和介绍，再通过微信二维码联系作者。
 
-## 验收标准
-- 页面上有作品列表，点进去能看到每件作品的照片和介绍。
-- 页面底部有微信二维码，买家可以扫码联系。
+第一版主动作：
+- 展示多件作品，并让买家看到联系方式。
+
+数据行为：
+- 作品照片和介绍由制作者手动写入页面；作者不需要自己登录管理。
+
+不做事项：
+- 不做购物车、支付、订单系统、账号登录、后台管理、买家留言、库存管理、发货跟踪、会员体系。
+
+验收标准：
+- 页面能展示多件作品。
+- 每件作品有照片和文字介绍。
+- 页面展示微信二维码，买家可以扫码联系。
 - 页面风格温暖、有手作感觉。
 ```
 
 ---
 
-## 例3：学习相关 —— 「我想做个背单词的工具」
+## 例3：学习相关 - 「我想做个背单词的工具」
 
 ### 用户原文
 
@@ -225,29 +197,19 @@ Reason: 目标、核心流程、功能范围、数据行为和验收标准都已
 ### 第1轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: "背单词"有很多实现方式，最容易跑偏的是做成一个完整的学习平台。
-
 ## 已确认
-- 你想做一个背单词的工具。
-- 使用场景：每天学几个新词。
-- 你提到了"复习提醒"，说明你在意复习效果。
-
-## 不能先假设
-- 不能先假设需要词库导入功能。
-- 不能先假设需要发音播放。
-- 不能先假设需要多人排行榜。
-- 不能先假设需要复杂的记忆算法。
+- 你想做一个背单词工具。
+- 使用场景是每天学几个新词。
+- 你在意复习效果。
 
 ## 下一步
-你的单词来源是什么？
+第一版里的单词从哪里来？
 
-A. 我自己手动输入想背的单词和意思
-B. 用一个现成的词库（比如四六级、考研、雅思）
-C. 读书、看剧的时候遇到不认识的词，想随手加进去
+A. 你自己手动输入单词和意思
+B. 使用现成词库，比如四六级、考研、雅思
+C. 读文章或看剧遇到生词时，随手加入自己的单词本
 
-推荐：如果你有明确的考试目标（比如四六级），选 B 最方便；如果只是平时积累，选 C 更灵活。
+推荐：如果你是日常积累，先选 C。它能收成一个很小的第一版：自己添加生词，再复习自己的单词本。
 ```
 
 ### 用户回答
@@ -259,30 +221,19 @@ C. 读书、看剧的时候遇到不认识的词，想随手加进去
 ### 第2轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: 单词来源已确认，还需要确认复习方式和数据保存。
-
 ## 已确认
 - 你想做一个自己用的单词本工具。
-- 单词来源：自己手动添加，来自平时阅读遇到的生词。
-- 每个单词包含：英文单词和中文意思。
-- 目标：积累自己的单词库，方便复习。
-
-## 不能先假设
-- 不能先假设需要注册账号。
-- 不能先假设需要自动发音。
-- 不能先假设需要间隔重复算法。
-- 不能先假设需要手机 App。
+- 单词来源是平时阅读遇到的生词。
+- 你要自己添加英文单词和中文意思。
 
 ## 下一步
-复习的时候你希望怎么用？
+复习时第一版用哪种方式？
 
-A. 打开页面，看到一个单词，想一下意思，点一下翻面看答案（简单的翻卡片）
-B. 做个小测验，给一个单词，从四个选项里选正确的意思
+A. 翻卡片：先看英文，点一下看中文意思
+B. 小测验：给一个单词，从几个选项里选意思
 C. 两种都要
 
-推荐：如果你只是想快速复习，选 A（翻卡片）最简单，也最接近"翻单词卡"的直觉。
+推荐：先选 A。翻卡片最接近纸质单词卡，第一版也最小。
 ```
 
 ### 用户回答
@@ -294,29 +245,19 @@ C. 两种都要
 ### 第3轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: 翻卡片复习已确认，还需确认使用设备和复习顺序。
-
 ## 已确认
-- 你想做一个自己用的单词本工具。
-- 核心流程：添加单词（英文+中文）→ 复习时翻卡片。
-- 复习方式：看到英文 → 点一下 → 翻面看到中文意思。
-- 数据要求：下次打开时之前添加的单词还在。
-
-## 不能先假设
-- 不能先假设需要注册账号。
-- 不能先假设需要自动发音、图片联想。
-- 不能先假设需要间隔重复算法。
+- 第一版主动作是添加生词并用翻卡片复习。
+- 复习时先看英文，点一下后看到中文意思。
+- 下次打开时，之前加过的单词需要还在。
 
 ## 下一步
-复习的时候，单词按什么顺序出现？
+复习时单词按什么顺序出现？
 
-A. 最新加的先复习
-B. 随机顺序
+A. 最新添加的先出现
+B. 随机出现
 C. 没记住的多出现几次，记住的少出现
 
-推荐：选 A 最简单，新加的排在最前面，复习完一遍再从头开始。
+推荐：先选 A。它最简单，不需要记忆算法，也方便先复习最近添加的词。
 ```
 
 ### 用户回答
@@ -328,32 +269,36 @@ C. 没记住的多出现几次，记住的少出现
 ### Ready 输出
 
 ```markdown
-## 当前结论
-Status: Ready
-Reason: 目标、核心流程、功能范围、数据行为和验收标准都已确认。
+## 需求简报
+问题：
+- 平时阅读遇到生词后容易散落，想积累成自己的单词本并复习。
 
-## 已确认
-- 目标：做一个自己用的网页单词本，方便积累和复习平时遇到的生词。
-- 用户：自己，在电脑浏览器里使用。
-- 核心流程：添加单词（输入英文和中文意思）→ 进入复习模式 → 看到英文 → 点击翻面看到中文 → 继续下一个。
-- V1 必须包含：单词添加功能（英文+中文输入）、单词列表、复习翻卡片模式（点一下翻面）、数据在浏览器保存（下次打开还在）。
-- V1 不做：注册登录、自动发音、图片联想、间隔重复算法、测验模式、手机适配、多设备同步、导入导出。
-- 数据行为：单词数据保存在浏览器本地，下次打开还在；清除浏览器数据后会丢失。
-- 复习顺序：最新添加的排在最前面。
-- 验收标准：能添加单词并保存；复习时能看到英文、点一下看到中文意思；下次打开页面之前添加的单词还在。
+用户：
+- 自己，在电脑浏览器里使用。
 
-## 不能先假设
-- 不能添加注册登录、自动发音、间隔重复算法、测验模式、手机适配、多设备同步、导入导出。
+场景：
+- 阅读时遇到生词后打开工具添加；复习时打开翻卡片模式。
 
-## 验收标准
-- 能添加单词（英文+中文），添加后出现在单词列表里。
-- 复习模式：显示英文，点击后翻面显示中文意思。
-- 下次打开页面，之前添加的单词还在。
+第一版主动作：
+- 添加英文单词和中文意思，并用翻卡片方式复习。
+
+数据行为：
+- 单词保存在当前电脑浏览器里；下次打开仍在，清除浏览器数据后会丢失。
+
+不做事项：
+- 不做账号登录、现成词库、自动发音、图片联想、间隔重复算法、测验模式、手机适配、多设备同步、导入导出。
+
+验收标准：
+- 能添加英文单词和中文意思。
+- 添加后能在单词列表里看到。
+- 复习模式显示英文，点击后显示中文意思。
+- 最新添加的单词先出现。
+- 关闭并重新打开同一浏览器后，之前添加的单词仍然存在。
 ```
 
 ---
 
-## 例4：社交/社群 —— 「我想做个粉丝群管理」
+## 例4：社交/社群 - 「我想做个粉丝群管理」
 
 ### 用户原文
 
@@ -364,29 +309,19 @@ Reason: 目标、核心流程、功能范围、数据行为和验收标准都已
 ### 第1轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: "粉丝群管理"范围很广，最容易跑偏的是做成一个完整的社区平台。
-
 ## 已确认
-- 你是一个小主播，粉丝越来越多。
-- 你想做一个东西来管理粉丝群。
-- 一个明确的需求：发通知让粉丝都能看到。
-
-## 不能先假设
-- 不能先假设需要论坛、帖子、评论功能。
-- 不能先假设需要粉丝分等级、打赏系统。
-- 不能先假设需要私信功能。
-- 不能先假设需要直播功能。
+- 你是小主播，粉丝越来越多。
+- 你想有一个地方管理粉丝相关信息。
+- 你提到一个明确需求：发内容让粉丝看到。
 
 ## 下一步
-你说的"粉丝群"，现在粉丝主要在哪里？
+你的粉丝现在主要在哪里？
 
-A. 微信群，粉丝加你微信进群
-B. 抖音/小红书/B站等平台的粉丝
-C. 还没有固定的群，想自己建一个
+A. 微信群里
+B. 抖音、小红书、B 站等平台上
+C. 还没有固定地方，想自己建一个
 
-推荐：如果你已经有微信群，选 A——做一个公告板工具，你发公告，粉丝扫码或点链接就能看到，不用把所有粉丝加到一个大群里。
+推荐：如果粉丝主要在平台上，先确认平台来源。这样第一版可以先解决“让粉丝在平台之外看到你的内容”。
 ```
 
 ### 用户回答
@@ -398,30 +333,20 @@ C. 还没有固定的群，想自己建一个
 ### 第2轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: 想建立自己的内容发布渠道，但还需要确认内容形式和互动需求。
-
 ## 已确认
-- 你是小主播，粉丝主要在抖音。
-- 想建立自己的渠道，不完全依赖抖音。
-- 一个核心需求：发内容，粉丝能看到。
-
-## 不能先假设
-- 不能先假设需要粉丝注册账号。
-- 不能先假设需要评论、点赞功能。
-- 不能先假设需要付费内容、打赏功能。
-- 不能先假设需要直播功能。
+- 粉丝主要来自抖音。
+- 你想建立一个抖音之外的内容发布地方。
+- 第一版重点是你发内容，粉丝能看到。
 
 ## 下一步
-你想在自己的地方发什么类型的内容？
+你第一版想发布什么内容形式？
 
-A. 主要是文字公告（比如活动通知、直播时间、动态分享）
-B. 文字 + 图片（图文内容）
-C. 文字 + 图片 + 视频
-D. 还有付费内容（只有付费的粉丝才能看）
+A. 文字公告
+B. 文字加图片
+C. 文字加图片加视频
+D. 付费内容
 
-推荐：选 B（文字 + 图片）最实用，既能发公告通知，也能发图文动态，比纯文字丰富，比视频简单。
+推荐：先选 B。图文比纯文字更丰富，比视频和付费内容简单，适合第一版。
 ```
 
 ### 用户回答
@@ -433,65 +358,60 @@ D. 还有付费内容（只有付费的粉丝才能看）
 ### 第3轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: 图文发布已确认，还需要确认"关注"和"提醒"的具体含义。
-
 ## 已确认
-- 你想做一个自己的图文内容发布页。
-- 内容形式：文字 + 图片。
-- 你发内容，粉丝能看到。
-- 想让粉丝"关注"，有新内容时收到提醒。
-
-## 不能先假设
-- 不能先假设需要推送通知（浏览器通知、短信等）。
-- 不能先假设需要粉丝之间互动。
-- 不能先假设需要复杂的关注体系。
+- 第一版是你自己的图文内容发布页。
+- 内容形式是文字加图片。
+- 付费内容以后再说。
+- 你希望粉丝能知道你发了新内容。
 
 ## 下一步
-你说的"提醒"，你希望粉丝怎么收到？
+你说的“提醒”，第一版具体指哪一种？
 
-A. 粉丝加到一个微信群里，你在工具里发内容，自动转发到群里
-B. 粉丝收藏这个页面，你发了新内容，他们下次打开就能看到
-C. 做一个微信公众号，发内容自动推送
+A. 粉丝收藏页面，之后自己打开查看新内容
+B. 浏览器或手机主动推送通知
+C. 发到微信群或公众号里
 
-推荐：如果你已经有微信群，选 A 最直接——你在一个地方发内容，自动同步到群里，粉丝在微信里就能看到。
+推荐：先选 A。它不需要账号、推送权限或公众号对接，第一版只要把内容页做好。
 ```
 
 ### 用户回答
 
 ```text
-没有大群，选 B 吧，他们收藏页面，有新内容就来看。关注就是收藏页面的意思。
+没有大群，选 A 吧，他们收藏页面，有新内容就来看。关注就是收藏页面的意思。
 ```
 
 ### Ready 输出
 
 ```markdown
-## 当前结论
-Status: Ready
-Reason: 目标、核心流程、功能范围、数据行为和验收标准都已确认。
+## 需求简报
+问题：
+- 想把抖音粉丝沉淀到自己的内容页面，减少只依赖平台发布的限制。
 
-## 已确认
-- 目标：做一个小主播自己的图文内容发布页，用来沉淀抖音以外的粉丝。
-- 用户：主播（发布者）+ 粉丝（浏览者），通过链接访问，手机或电脑浏览器。
-- 核心流程：主播发布内容（文字+图片）→ 粉丝打开链接看到内容列表 → 点进去看详情。
-- V1 必须包含：内容发布功能（文字+图片，主播在后台发布）、内容列表页（粉丝打开链接看到所有内容）、内容详情页。
-- V1 不做：粉丝注册登录、评论互动、点赞打赏、付费内容、推送提醒、私信、直播、视频内容、关注体系。
-- 数据行为：内容由主播发布后保存在服务器，粉丝随时可以查看；不需要粉丝账号。
-- 验收标准：主播能发布图文内容；粉丝打开链接能看到内容列表并点进去看详情。
+用户：
+- 主播作为发布者；粉丝作为浏览者。
 
-## 不能先假设
-- 不能添加粉丝注册登录、评论互动、点赞打赏、付费内容、推送通知、私信、直播、关注体系、视频内容。
+场景：
+- 主播发布图文内容；粉丝打开收藏的链接，查看内容列表和详情。
 
-## 验收标准
-- 主播能在后台发布图文内容（文字+图片）。
-- 粉丝打开链接能看到内容列表，点进去看详情。
-- 不需要粉丝登录就能浏览内容。
+第一版主动作：
+- 发布并展示图文内容。
+
+数据行为：
+- 主播发布的图文内容保存在页面服务里；粉丝不需要登录即可浏览。
+
+不做事项：
+- 不做粉丝注册登录、评论、点赞、打赏、付费内容、推送通知、私信、直播、视频内容、关注体系。
+
+验收标准：
+- 主播能发布文字加图片内容。
+- 粉丝打开链接能看到内容列表。
+- 粉丝能点进内容详情查看图文。
+- 粉丝不登录也能浏览。
 ```
 
 ---
 
-## 例5：生活服务 —— 「我想做个小区团购」
+## 例5：生活服务 - 「我想做个小区团购」
 
 ### 用户原文
 
@@ -502,30 +422,20 @@ Reason: 目标、核心流程、功能范围、数据行为和验收标准都已
 ### 第1轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: "管理团购"有很多环节，最容易跑偏的是做成一个完整的电商系统。
-
 ## 已确认
-- 场景：小区团购，经常有人组织。
-- 现在的方式：微信群接龙，比较混乱。
-- 想做一个工具来管理团购。
-
-## 不能先假设
-- 不能先假设需要支付功能。
-- 不能先假设需要商品库、库存管理。
-- 不能先假设需要配送管理。
-- 不能先假设需要多个团长各自开团。
+- 场景是小区团购。
+- 现在用微信群接龙，信息很乱。
+- 你想做一个工具管理团购。
 
 ## 下一步
 微信群接龙最让你头疼的是什么？
 
 A. 不知道谁买了什么、买了多少份
-B. 买完之后算账、收钱很麻烦
-C. 参团的人不知道团购的进度（成团了没、什么时候到货）
-D. 以上都有
+B. 算账和收钱很麻烦
+C. 参团的人不知道进度
+D. 以上都要
 
-推荐：选 A 最聚焦——先解决"统计谁买了什么"这个最痛的问题，算账和进度后面再加。
+推荐：先选 A。它最聚焦，第一版先解决“统计谁买了什么”这个最具体的问题。
 ```
 
 ### 用户回答
@@ -537,31 +447,19 @@ D. 以上都有
 ### 第2轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: 统计需求已确认，还需要确认使用流程和角色。
-
 ## 已确认
-- 场景：小区团购，目前用微信群接龙。
-- 核心痛点：统计谁买了什么、几份很麻烦。
-- 第一版重点：解决统计混乱的问题。
-
-## 不能先假设
-- 不能先假设需要支付、收款功能。
-- 不能先假设需要配送跟踪。
-- 不能先假设需要多个团长。
-- 不能先假设需要商品库。
+- 第一版重点是解决团购统计混乱。
+- 团长需要清楚看到谁买了什么、买了几份。
+- 暂时不处理收款和进度。
 
 ## 下一步
-团购一般怎么组织的？
+第一版的团购一般怎么组织？
 
-A. 你（团长）选好一个商品（比如水果、鸡蛋），发出来让大家选要不要、要几份
-B. 有好几个商品，大家从列表里自己选
-C. 有时候是水果，有时候是日用品，品类不固定
+A. 每次只团一个商品，邻居填姓名和份数
+B. 每次有多个商品，邻居从商品列表里选择
+C. 多个团长都能各自开团
 
-还有，参团的人需要登录吗？还是用链接就能参加？
-
-推荐：如果每次团购就一两个商品，选 A（单个商品开团）最简单；参团的人不需要登录，用链接就能填，最方便。
+推荐：先选 A。单商品开团最小，能直接替代微信群接龙。
 ```
 
 ### 用户回答
@@ -573,31 +471,35 @@ C. 有时候是水果，有时候是日用品，品类不固定
 ### Ready 输出
 
 ```markdown
-## 当前结论
-Status: Ready
-Reason: 目标、核心流程、功能范围、数据行为和验收标准都已确认。
+## 需求简报
+问题：
+- 小区团购用微信群接龙统计很乱，团长需要清楚知道谁买了什么和买了几份。
 
-## 已确认
-- 目标：做一个小区团购统计工具，替代微信群接龙，让团长能清楚看到谁买了什么。
-- 用户：团长（组织者）+ 参团的邻居们，用手机浏览器。
-- 核心流程：团长开团（填商品名、描述、截团时间）→ 生成一个链接/二维码发到群里 → 邻居点链接填姓名和份数 → 团长在后台看到所有参团记录和汇总。
-- V1 必须包含：开团功能（团长填商品信息）、参团页面（邻居填姓名和份数）、参团记录列表（团长看谁买了什么、汇总总份数）。
-- V1 不做：支付收款、配送管理、商品库、多团长体系、参团登录、历史团购记录、自动截团、通知提醒。
-- 数据行为：团购数据在服务器保存，参团的人不需要登录，填姓名和份数即可；团长在后台能看到当次团购的所有记录。
-- 验收标准：团长能开团并生成链接；邻居点链接能参团填写；团长能看到所有人的参团记录和总份数汇总。
+用户：
+- 团长作为组织者；邻居作为参团者。
 
-## 不能先假设
-- 不能添加支付、配送、商品库、多团长、登录、历史记录、自动截团、通知提醒。
+场景：
+- 团长开一个单商品团购，把链接发到群里；邻居打开链接填写姓名和份数；团长查看统计。
 
-## 验收标准
-- 团长能开一个团（填商品名、描述）并生成分享链接。
+第一版主动作：
+- 单商品开团并收集参团记录。
+
+数据行为：
+- 团购和参团记录保存在工具里；邻居不需要登录，只填写姓名和份数。
+
+不做事项：
+- 不做支付收款、配送管理、商品库、多团长体系、参团登录、历史团购记录、自动截团、通知提醒。
+
+验收标准：
+- 团长能创建一个团购，填写商品名和描述。
+- 工具能生成可分享链接。
 - 邻居打开链接能填写姓名和份数。
-- 团长后台能看到所有参团记录，以及总份数汇总。
+- 团长能看到所有参团记录和总份数。
 ```
 
 ---
 
-## 例6：English Example —— A Personal Productivity Tool
+## 例6：English Example - A Personal Productivity Tool
 
 ### User Message
 
@@ -608,30 +510,19 @@ I want to make a to-do list but not like the ones you see everywhere. I want som
 ### Round 1: Need More Info
 
 ```markdown
-## Current Conclusion
-Status: Need More Info
-Reason: "A minimal to-do list" is clear in spirit, but the details around saving and device would most likely cause guessing.
-
 ## Confirmed
-- You want a minimal to-do list tool.
-- Core flow: type a task, cross it off when done.
-- No categories, no due dates, no fancy stuff.
-
-## Forbidden Assumptions
-- Cannot assume it needs user accounts.
-- Cannot assume it needs priority levels, tags, or categories.
-- Cannot assume it needs due dates, reminders, or notifications.
-- Cannot assume it needs sharing or collaboration.
-- Cannot assume it needs a mobile app.
+- You want a very minimal to-do list.
+- Core action: type a task and cross it off when done.
+- You do not want categories, due dates, or extra features.
 
 ## Next Step
-When you cross something off, should it disappear from the list, or stay visible but crossed out?
+After you cross something off, what should happen to it?
 
-A. It stays on the list, crossed out — so I can see what I've done today
-B. It gets removed from the list — I only want to see what's left
-C. It moves to a separate "done" section
+A. It stays visible, crossed out
+B. It disappears from the list
+C. It moves to a separate done section
 
-Recommendation: If you want to feel a sense of progress, A (stay crossed out) is the simplest and most satisfying — no extra sections or pages needed.
+Recommendation: Start with A. It is the smallest version that still lets you see what you finished.
 ```
 
 ### User Reply
@@ -643,29 +534,19 @@ A, definitely. I like seeing a long list of crossed-out stuff at the end of the 
 ### Round 2: Need More Info
 
 ```markdown
-## Current Conclusion
-Status: Need More Info
-Reason: Cross-out behavior is confirmed. Still need to confirm data saving and device.
-
 ## Confirmed
-- You want a minimal to-do list tool.
-- Core flow: type a task → it appears on the list → cross it off when done → it stays visible but crossed out.
-- No categories, due dates, priorities, tags, accounts, sharing, or collaboration.
-
-## Forbidden Assumptions
-- Cannot assume it needs user accounts or login.
-- Cannot assume it needs to sync across devices.
-- Cannot assume it needs reminders or notifications.
+- You want a minimal personal to-do list.
+- Tasks stay visible after completion, marked as done.
+- V1 does not need categories, due dates, priorities, sharing, or reminders.
 
 ## Next Step
-Should the list survive if you close the browser and come back tomorrow?
+Should the list still be there after you close the browser and come back tomorrow?
 
-A. Yes — I want my tasks and crossed-out items to still be there next time I open it
-B. No — a fresh start every time I open the page is fine
+A. Yes, keep the tasks and done state in the same browser
+B. No, start fresh every time
+C. Yes, and keep it synced across devices
 
-Also, where will you use it?
-
-Recommendation: If this is your daily work tool, you probably want it to survive (A). And using it in a browser on your computer is the simplest setup.
+Recommendation: Start with A. It keeps your daily list without needing accounts or sync.
 ```
 
 ### User Reply
@@ -677,31 +558,35 @@ Yeah, I need it to survive. I'll use it in my browser on my laptop. No need for 
 ### Ready Output
 
 ```markdown
-## Current Conclusion
-Status: Ready
-Reason: Goal, user, core flow, V1 scope, non-goals, data behavior, and acceptance criteria are all confirmed.
+## Requirements Brief
+Problem:
+- Daily tasks are easy to lose track of, and existing to-do apps feel too heavy.
 
-## Confirmed
-- Goal: Build a personal minimal to-do list for daily use.
-- User: The user, in a browser on a laptop.
-- Core flow: Type a task → it appears on the list → cross it off when done → it stays visible but marked as done.
-- V1 must include: task input field, task list, cross-off action (stays visible but crossed out), data persistence across sessions.
-- V1 will not include: categories, due dates, priorities, tags, accounts, login, sharing, collaboration, reminders, notifications, mobile version, multiple lists, import/export.
-- Data behavior: Tasks persist across browser sessions (close and reopen, tasks are still there). Data is stored in the browser; clearing browser data removes the tasks.
-- Acceptance criteria: Can add a task; can cross off a task (stays visible, marked as done); closing and reopening the browser shows the same list.
+User:
+- The user, in a laptop browser.
 
-## Forbidden Assumptions
-- Do not add accounts, login, categories, due dates, priorities, tags, sharing, reminders, notifications, mobile version, multiple lists, import/export, or a tech stack recommendation.
+Scenario:
+- During the workday, the user opens the browser list, adds tasks, and crosses them off.
 
-## Acceptance Criteria
-- User can type a task and add it to the list.
-- User can cross off a task; the task stays on the list, visually marked as done.
-- Closing and reopening the browser shows the same tasks and their status.
+V1 main action:
+- Add a task and mark it done while keeping done tasks visible.
+
+Data behavior:
+- Tasks and done state persist in the same browser. Clearing browser data removes them.
+
+Non-goals:
+- No categories, due dates, priorities, tags, accounts, login, sharing, collaboration, reminders, notifications, phone app, multiple lists, import, or export.
+
+Acceptance criteria:
+- User can type and add a task.
+- User can cross off a task.
+- Crossed-off tasks stay visible and visually marked as done.
+- Closing and reopening the same browser shows the same tasks and states.
 ```
 
 ---
 
-## 例7：生活服务 —— 「我想做个宠物寄养预约」
+## 例7：生活服务 - 「我想做个宠物寄养预约」
 
 ### 用户原文
 
@@ -712,30 +597,19 @@ Reason: Goal, user, core flow, V1 scope, non-goals, data behavior, and acceptanc
 ### 第1轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: "预约工具"的范围很广，最容易跑偏的是做成一个带日历、支付、客服的完整预约系统。
-
 ## 已确认
 - 你在小区做宠物寄养。
-- 现在的方式：微信一条条问、一条条记，很乱。
-- 想做一个简单的预约工具。
-
-## 不能先假设
-- 不能先假设需要在线支付。
-- 不能先假设需要日历排期视图。
-- 不能先假设需要宠物主人注册账号。
-- 不能先假设需要多种宠物类型。
-- 不能先假设需要价格计算器。
+- 现在靠微信一条条问、一条条记，很乱。
+- 你想做一个简单预约工具。
 
 ## 下一步
-寄养预约的时候，你最需要记清楚的信息是什么？
+第一版预约时，最需要记清楚哪些信息？
 
-A. 谁的宠物、什么时候送来、什么时候接走
-B. 以上 + 宠物的品种、特殊注意事项（比如吃什么、怕什么）
-C. 以上 + 自动算费用
+A. 主人是谁、什么时候送来、什么时候接走
+B. 以上信息，加上宠物品种和特殊注意事项
+C. 以上信息，再自动计算费用
 
-推荐：先选 B，把主人信息、寄养时间和宠物特殊情况记清楚，费用可以自己算，这样第一版最实用。
+推荐：先选 B。它能解决“信息记不清”的核心问题，费用仍可以你自己算。
 ```
 
 ### 用户回答
@@ -747,27 +621,19 @@ C. 以上 + 自动算费用
 ### 第2轮：Need More Info
 
 ```markdown
-## 当前结论
-Status: Need More Info
-Reason: 记录内容已确认，还需要确认使用流程。
-
 ## 已确认
-- 你想做一个宠物寄养记录工具。
-- 记录内容：主人信息（名字、联系方式）、寄养时间（送来日期、接走日期）、宠物信息（品种、特殊注意事项）。
-- 不需要在线支付、费用计算。
-
-## 不能先假设
-- 不能先假设需要宠物主人自己填写。
-- 不能先假设需要日历视图。
-- 不能先假设需要短信提醒。
+- 第一版要记录主人信息、寄养时间、宠物信息和特殊注意事项。
+- 不需要自动计算费用。
+- 核心问题是替代微信聊天里的混乱记录。
 
 ## 下一步
-这个工具谁来用？
+这个工具第一版由谁来填写预约记录？
 
-A. 只有你自己用——主人在微信上告诉你信息，你自己填进去
-B. 主人自己打开链接填写预约，你在后台看
+A. 只有你自己填写，主人仍然在微信告诉你信息
+B. 主人打开链接自己填写，你在后台查看
+C. 主人和你都可以填写
 
-推荐：选 A 最简单——你把微信上的信息整理填进去就行，主人不需要多做一个操作，也不会填错。
+推荐：先选 A。它最小，不要求宠物主人多做一步，也不需要公开预约表单。
 ```
 
 ### 用户回答
@@ -779,31 +645,34 @@ B. 主人自己打开链接填写预约，你在后台看
 ### Ready 输出
 
 ```markdown
-## 当前结论
-Status: Ready
-Reason: 目标、核心流程、功能范围、数据行为和验收标准都已确认。
+## 需求简报
+问题：
+- 宠物寄养信息散落在微信聊天里，容易漏记或查找困难。
 
-## 已确认
-- 目标：做一个个人用的宠物寄养记录工具，替代微信聊天记录里的混乱信息。
-- 用户：自己，在手机或电脑浏览器里使用。
-- 核心流程：主人在微信告诉你信息 → 你在工具里填写预约记录（主人姓名、联系方式、宠物品种、特殊注意事项、送来日期、接走日期）→ 查看当前寄养列表和即将到期的记录。
-- V1 必须包含：新增寄养记录表单（主人信息、宠物信息、寄养时间、特殊注意事项）、当前寄养记录列表、即将到期记录高亮显示。
-- V1 不做：宠物主人自己预约、在线支付、日历视图、短信提醒、宠物主人账号、历史记录统计。
-- 数据行为：记录保存在工具里，下次打开还在。
-- 验收标准：能填写寄养记录；能看到当前寄养列表；能看出来哪些快到期了。
+用户：
+- 寄养服务提供者自己。
 
-## 不能先假设
-- 不能添加宠物主人自行预约、在线支付、日历视图、短信提醒、账号登录、历史统计。
+场景：
+- 主人在微信告知寄养信息后，服务提供者打开工具录入，并查看当前寄养状态。
 
-## 验收标准
-- 能填写新的寄养记录（主人姓名、联系方式、宠物品种、特殊注意事项、送来日期、接走日期）。
+第一版主动作：
+- 新增寄养记录，并查看当前寄养列表和即将到期记录。
+
+数据行为：
+- 寄养记录保存在工具里；下次打开仍能看到。
+
+不做事项：
+- 不做宠物主人自行预约、在线支付、费用计算、日历视图、短信提醒、宠物主人账号、历史统计。
+
+验收标准：
+- 能填写主人姓名、联系方式、宠物品种、特殊注意事项、送来日期、接走日期。
 - 能看到当前寄养中的记录列表。
-- 能看出来哪些寄养快到期了（比如临近接走日期的高亮显示）。
+- 能看出哪些记录临近接走日期。
 ```
 
 ---
 
-## 例8：英文例子 —— A Family Chore Tracker
+## 例8：英文例子 - A Family Chore Tracker
 
 ### User Message
 
@@ -814,29 +683,19 @@ I need something to track chores for my kids. They never remember whose turn it 
 ### Round 1: Need More Info
 
 ```markdown
-## Current Conclusion
-Status: Need More Info
-Reason: "Track chores for kids" can go many directions — from a simple checklist to a reward system with points and allowance.
-
 ## Confirmed
 - You want a chore tracker for your kids.
-- Problem: kids don't remember whose turn it is.
+- Problem: they do not remember whose turn it is.
 - You want to assign chores and let kids check them off.
-
-## Forbidden Assumptions
-- Cannot assume it needs points, rewards, or allowance tracking.
-- Cannot assume it needs multiple kids with separate logins.
-- Cannot assume it needs a weekly schedule or calendar.
-- Cannot assume it needs a mobile app.
 
 ## Next Step
 What happens after a kid checks off a chore?
 
-A. Nothing — I just want to see that it's done, so I don't have to ask
-B. I want to give them points or a reward for finishing
-C. It should reset for the next day or week, so the same chores rotate
+A. Nothing extra; you just see it is done
+B. They earn points or rewards
+C. The chore resets on a daily or weekly rotation
 
-Recommendation: If your main goal is just to stop being the referee, A is enough for V1 — assign chores, kids check them off, you see what's done. Points and rotation can come later.
+Recommendation: Start with A. It solves the referee problem without adding rewards or scheduling rules.
 ```
 
 ### User Reply
@@ -848,29 +707,20 @@ A is fine for now. I just want to see who's done what without nagging.
 ### Round 2: Need More Info
 
 ```markdown
-## Current Conclusion
-Status: Need More Info
-Reason: The "assign and check off" flow is clear. Need to confirm how kids interact with it.
-
 ## Confirmed
-- You want a simple chore tracker for your family.
-- Core flow: you assign chores → kids check them off → you see what's done.
+- V1 is a simple family chore tracker.
+- Parent assigns chores.
+- Kids check chores off.
 - No points, rewards, or rotation for V1.
-
-## Forbidden Assumptions
-- Cannot assume kids need their own accounts or logins.
-- Cannot assume it needs a mobile app.
-- Cannot assume it needs push notifications.
 
 ## Next Step
 How will your kids see their chores?
 
-A. They open a link on a shared family tablet or computer — everyone sees the same list with names next to each chore
-B. Each kid gets their own link or page — they only see their own chores
+A. One shared list on a family device, with names next to each chore
+B. Each kid gets a separate link or page
+C. Each kid logs into their own account
 
-Also, how many kids are we talking about?
-
-Recommendation: If it's 2–3 kids and a shared device, A (one shared list) is the simplest — no separate links to manage.
+Recommendation: Start with A. A shared list is simplest for a family device and avoids accounts or separate links.
 ```
 
 ### User Reply
@@ -882,25 +732,104 @@ Two kids, ages 10 and 12. They'll use the family iPad. A shared list with names 
 ### Ready Output
 
 ```markdown
-## Current Conclusion
-Status: Ready
-Reason: Goal, user, core flow, V1 scope, non-goals, data behavior, and acceptance criteria are all confirmed.
+## Requirements Brief
+Problem:
+- The parent has to remind kids whose turn it is to do chores.
 
-## Confirmed
-- Goal: Build a simple family chore tracker so the parent doesn't have to remind kids whose turn it is.
-- User: Parent (assigns chores) + two kids (ages 10 and 12), using the family iPad.
-- Core flow: Parent assigns chores with kid names → kids open the page on the iPad → kids check off chores when done → parent sees what's done and what's not.
-- V1 must include: chore input (chore name + assigned kid), shared chore list with names, check-off action for each chore, clear view of what's done vs. not done.
-- V1 will not include: separate logins for each kid, points or rewards, weekly rotation or calendar, push notifications, mobile app, history or stats.
-- Data behavior: Chores persist across sessions. Data is stored in the browser; clearing browser data removes it.
-- Acceptance criteria: Parent can add a chore and assign it to a kid; kids can check off chores; the list clearly shows what's done and what's not.
+User:
+- Parent assigns chores; two kids, ages 10 and 12, check them off on the family iPad.
 
-## Forbidden Assumptions
-- Do not add accounts, login, points, rewards, rotation, calendar, notifications, mobile app, history, stats, or a tech stack recommendation.
+Scenario:
+- Parent adds chores with a kid's name. Kids open the shared list on the iPad and check off finished chores.
 
-## Acceptance Criteria
+V1 main action:
+- Assign a chore to a kid and mark it done.
+
+Data behavior:
+- Chores and done state persist in the same browser on the family iPad. Clearing browser data removes them.
+
+Non-goals:
+- No separate kid accounts, login, points, rewards, weekly rotation, calendar, push notifications, phone app, history, or stats.
+
+Acceptance criteria:
 - Parent can add a chore and assign it to a specific kid.
-- The shared page shows all chores with the assigned kid's name.
-- Kids can check off a chore; checked-off chores are clearly marked as done.
-- The list clearly distinguishes done vs. not-done chores.
+- The shared page shows chores with assigned kid names.
+- Kids can check off chores.
+- Done and not-done chores are visually distinct.
+```
+
+---
+
+## 按需执行 Prompt 示例
+
+### 用户追加要求
+
+```text
+现在生成可以交给 Codex 的执行 Prompt。
+```
+
+### 输出
+
+```markdown
+## 需求简报
+问题：
+- 做一个自己用的手机浏览器记账工具，避免花了钱之后没有清楚记录。
+
+用户：
+- 自己。
+
+场景：
+- 平时花钱后打开手机浏览器随手记录。
+
+第一版主动作：
+- 选择固定分类，填写金额，记一笔，并看到记录列表。
+
+数据行为：
+- 记录保存在当前手机浏览器里；换设备或清除浏览器数据后会丢失。
+
+不做事项：
+- 不做账号登录、云同步、统计图表、预算提醒、导出、自定义分类、多设备同步。
+
+验收标准：
+- 能选固定分类、填写金额并记一笔。
+- 记完后能看到已记录的账目列表。
+
+## 执行 Prompt
+你要实现一个小应用。只能实现下面确认过的内容，不要添加任何未确认功能。
+
+问题：
+- 做一个自己用的手机浏览器记账工具，避免花了钱之后没有清楚记录。
+
+用户：
+- 自己。
+
+核心流程：
+- 打开页面 -> 选择固定分类 -> 填写金额 -> 点击“记一笔” -> 看到记录列表。
+
+数据行为：
+- 记录保存在当前手机浏览器里；换设备或清除浏览器数据后会丢失。
+
+必须实现：
+- 固定分类选择。
+- 金额输入。
+- “记一笔”按钮。
+- 记账记录列表。
+- 当前浏览器本地保存。
+
+不得实现：
+- 账号登录。
+- 云同步。
+- 统计图表。
+- 预算提醒。
+- 导出。
+- 自定义分类。
+- 多设备同步。
+
+禁止假设：
+- 不要添加后端、数据库、支付、AI、通知、分享、多人权限或移动 App 打包。
+
+验收标准：
+- 能选固定分类、填写金额并记一笔。
+- 记完后能看到已记录的账目列表。
+- 关闭并重新打开同一手机浏览器后，记录仍然存在。
 ```
