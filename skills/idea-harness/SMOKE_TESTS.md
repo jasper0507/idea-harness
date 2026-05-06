@@ -1,24 +1,36 @@
-# Idea Harness v0.4.0 冒烟测试
+# Idea Harness v0.5.0 冒烟测试
 
 这些测试用于手动验证 skill 行为契约。仓库保持 skill-only，因此测试以用户输入、预期可见输出规则和静态检查命令的形式记录。
 
 ## 静态检查
 
-实现后运行：
+### 内部术语不泄露
 
 ```powershell
-rg -n "## 当前结论|Status:|Reason:|## 不能先假设|## Current Conclusion|## Forbidden Assumptions" skills\idea-harness\SKILL.md skills\idea-harness\EXAMPLES.md README.md README.en.md
+rg -n "Status:|Reason:|## 不能先假设|## Current Conclusion|## Forbidden Assumptions|精确度缺口|阻断条件|Precision Gap|Blocking Condition" skills\idea-harness\SKILL.md skills\idea-harness\EXAMPLES.md README.md README.en.md
 ```
 
 预期：无输出。
 
+### 核心结构存在
+
 ```powershell
-rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Prompt|Harness Gate" skills\idea-harness\SKILL.md skills\idea-harness\EXAMPLES.md README.md README.en.md
+rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Prompt|Harness Gate|PRECISION-GATE|STATE-MACHINE|VOCABULARY|OUTPUTS" skills\idea-harness\SKILL.md
 ```
 
-预期：有命中，分别对应 v0.4.0 的 Ready 简报、按需执行 Prompt 和内部 Harness Gate 规则。
+预期：有命中，分别对应 v0.5.0 的简报模板引用、执行 Prompt 引用和四个支撑文件引用。
 
-## Case 1：模糊想法必须保持 Need More Info
+### SKILL.md 行数
+
+```powershell
+(Get-Content skills\idea-harness\SKILL.md | Measure-Object -Line).Lines
+```
+
+预期：不超过 120 行。
+
+---
+
+## Case 1：模糊想法 → gathering 状态
 
 用户输入：
 
@@ -28,20 +40,15 @@ rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Promp
 
 预期可见输出：
 
-- 只展示 `## 已确认` 和 `## 下一步`。
-- 不展示 `Status`、`Reason`、`仍缺`、`为什么重要`、`不能先假设` 或 `Harness Gate`。
+- 只展示 `## 已确认` 和 `## 追问`。
+- 不展示 `Status`、`Reason`、`仍缺`、`为什么重要`、`不能先假设`、`Harness Gate` 或任何内部术语。
 - 问题聚焦具体学习痛点，不问技术栈。
 - 给 2 到 4 个有意义选项。
 - 包含一个面向最小可用第一版的推荐。
 
-必需追问方向：
+预期内部状态：`gathering`（门槛 1 未明确）。
 
-```markdown
-## 下一步
-“学习管理网站”还不是一个清楚的问题。你现在最想先摆脱哪种学习上的麻烦？
-```
-
-## Case 2：用户说“都要”不能进入 Ready
+## Case 2：用户说"都要" → blocked 状态
 
 用户输入：
 
@@ -52,12 +59,12 @@ rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Promp
 预期可见输出：
 
 - 继续澄清。
-- 直接说明第一版不能一次接受所有功能。
-- 只问第一版先做哪一个。
-- 不输出需求简报。
-- 不输出执行 Prompt。
+- 构造代价场景，然后只问第一版先做哪一个。
+- 不输出需求简报或执行 Prompt。
 
-## Case 3：用户说“你决定”必须要求确认
+预期内部状态：`blocked`（"都要"未确认优先级）。
+
+## Case 3：用户说"你决定" → blocked 状态
 
 用户输入：
 
@@ -68,30 +75,56 @@ rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Promp
 预期可见输出：
 
 - 推荐一个选项。
-- 说明为什么它是最小可用第一版。
+- 用用户场景解释为什么推荐。
 - 要求用户确认推荐方案。
 - 在用户确认前不能进入 Ready。
 
-## Case 4：Ready 默认只输出需求简报
+预期内部状态：`blocked`（"你决定"未确认推荐）。
+
+## Case 4：门槛全部回答但精确度不足 → needs-precision 状态
 
 已确认事实：
+
+- 问题 / 痛点：想做一个记录工具。
+- 用户：自己。
+- 场景：平时用。
+- 第一版主动作：记录。
+- 数据行为：保存。
+- 不做事项：不做登录。
+- 验收标准：能记录。
+
+预期行为：
+
+- 不进入 Ready，尽管七个门槛都有回答。
+- 追问精确度缺口：
+  - "记录"具体记什么？（术语一致性）
+  - "保存"是浏览器本地还是换设备也在？（隐藏默认值）
+  - "平时用"是什么时候？用什么设备？（场景走查）
+- 追问使用精确度问法（假设暴露、场景走查、对比锚定），而非打开新门槛。
+
+预期内部状态：`needs-precision`。
+
+## Case 5：Ready 默认只输出需求简报
+
+已确认事实（精确度全通过）：
 
 - 问题 / 痛点：个人浏览器待办清单，用来避免忘记当天任务。
 - 用户 / 利益相关者：只有用户自己。
 - 使用背景 / 场景：工作日用电脑浏览器打开。
 - 第一版主动作：添加任务并标记完成。
 - 数据行为：关闭再打开同一浏览器后任务仍然存在。
-- 不做事项 / 约束：不做账号、分享、提醒、分类、截止日期、手机 App、同步。
+- 不做事项 / 范围边界：不做账号、分享、提醒、分类、截止日期、手机 App、同步。
 - 验收标准：能添加任务、标记完成、关闭再打开后仍看到同一列表。
 
 预期可见输出：
 
 - 展示 `## 需求简报`。
-- 包含问题、用户、场景、第一版主动作、数据行为、不做事项和验收标准。
-- 不展示 `Harness Gate`。
-- 不展示 `执行 Prompt`。
+- 每条不做事项附带原因。
+- 不展示 `Harness Gate` 或 `执行 Prompt`。
 
-## Case 5：只有明确要求时才输出执行 Prompt
+预期内部状态：`ready`。
+
+## Case 6：只有明确要求时才输出执行 Prompt
 
 用户输入：
 
@@ -103,11 +136,13 @@ rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Promp
 
 - 先展示 `## 需求简报`。
 - 再展示 `## 执行 Prompt`。
+- 执行 Prompt 使用行为契约风格（描述行为，不描述 UI 元素）。
 - 执行 Prompt 只包含已确认需求。
-- 执行 Prompt 明确禁止未确认的登录、后端、支付、AI、统计、通知、分享、同步功能。
+- 执行 Prompt 明确禁止未确认功能。
+- 不得事项附带原因。
 - 除非用户已确认技术栈，否则不选择技术栈。
 
-## Case 6：隐藏假设必须被阻止
+## Case 7：隐藏默认值必须被拦截
 
 用户输入：
 
@@ -115,12 +150,13 @@ rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Promp
 我想做个记账工具，能记录每天花了多少钱。
 ```
 
-预期可见输出：
+预期行为：
 
 - 不假设账号、云同步、数据库、图表、预算、导出或多人使用。
 - 追问真实需求分叉，例如记录完后用户想拿记录做什么。
+- 如果用户后续说"下次打开还在"，追问是浏览器本地还是云端（精确度检查 - 隐藏默认值）。
 
-## Case 7：冲突答案只问冲突点
+## Case 8：冲突答案 → blocked 状态
 
 已知用户之前说：
 
@@ -137,28 +173,63 @@ rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Promp
 预期可见输出：
 
 - 用普通话指出冲突。
+- 把两句原话并排引出来。
 - 只问第一版到底是否需要登录和每个人看自己的内容。
 - 不在同一轮问无关问题。
 
-## Case 8：Harness Gate 控制执行 Prompt
+预期内部状态：`blocked`（矛盾扫描检测到冲突）。
 
-在一个 Ready 对话中，用户明确要求生成执行 Prompt 后，人工检查输出。
+## Case 9：术语一致性检查
 
-预期可见输出：
+用户在不同轮次中说了：
 
-- 默认需求简报先出现。
-- 执行 Prompt 包含必须实现、不得实现、禁止假设、验收标准。
-- 执行 Prompt 不包含未确认功能。
-- 内部 Harness Gate 本身不作为审计结构展示给用户。
+```text
+我想记录学习内容。
+```
+
+```text
+我想看学习进度。
+```
+
+预期行为：
+
+- 追问"内容"和"进度"是否指同一件事。
+- 不默认它们相同。
+- 使用精确度追问而非门槛追问。
+
+## Case 10：场景走查检查
+
+用户对七个门槛都给了表面回答，但使用场景从"打开 → 完成主动作 → 关闭 → 重新打开"有一步未确认。
+
+预期行为：
+
+- 不进入 Ready。
+- 指出场景中的断裂步骤。
+- 追问那一步的具体行为。
+
+## Case 11：原型逃生口
+
+连续 3 轮追问后用户对视觉或流程仍然模糊。
+
+预期行为：
+
+- 不继续文字追问。
+- 建议先做低保真原型。
+- 让用户选择 UI 原型还是流程原型。
+
+---
 
 ## 手动通过标准
 
-v0.4.0 实现通过的条件：
+v0.5.0 实现通过的条件：
 
-- Need More Info 可见输出只包含已确认事实和下一步问题。
+- SKILL.md 不超过 120 行，核心流程完整。
+- 四个支撑文件（STATE-MACHINE / PRECISION-GATE / OUTPUTS / VOCABULARY）各自独立可读。
+- `gathering` / `needs-precision` / `blocked` / `ready` 四个状态行为可区分。
+- 精确度检查能拦住"表面完整但不够精确"的需求。
+- 不做事项附带原因。
+- 执行 Prompt 使用行为契约风格。
+- Need More Info 可见输出只包含已确认事实和追问。
 - Ready 可见输出默认只包含需求简报。
-- 执行 Prompt 只在用户明确要求后出现。
-- 七个门槛全部确认后才能 Ready。
-- “都要”和“你决定”不能跳过确认。
-- 用户可见案例不暴露内部 status、reason、missing gates、forbidden assumptions 或 Harness Gate。
+- 用户可见案例不暴露任何内部术语。
 - 默认输出不发明登录、后端、支付、AI、统计、通知、分享、同步或技术栈。

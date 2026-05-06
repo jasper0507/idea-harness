@@ -37,11 +37,13 @@ It takes a "clarify before implementation" workflow + Harness Engineering's cont
 
 Core mechanisms:
 - Only acknowledge facts the user explicitly stated or confirmed
-- Maintain seven clarification gates internally
+- Maintain seven clarification gates as a decision tree, not a linear checklist
+- Four precision checks catch requirements that look complete but aren't precise enough
+- Hard state machine: `gathering` → `needs-precision` → `blocked` → `ready`
 - Ask exactly one critical question by default
-- In `Need More Info`, show only `Confirmed` and `Next Step`
+- In `Need More Info`, show only `Confirmed` and `Question`
 - In `Ready`, show only the `Requirements Brief` by default
-- Generate an execution prompt for a coding agent only when the user explicitly asks for one
+- Generate a behavior-contract-style execution prompt only when the user explicitly asks
 
 ---
 
@@ -52,7 +54,7 @@ Core mechanisms:
 | **Scope** | **Ultra-narrow** — only does clarification | Full pipeline / execution / code generation |
 | **Core Principle** | **No guessing**, only confirmed facts | Encourages creativity, proactively fills in features |
 | **Stage** | **Step 0 when idea is most vague** | After some clarity is already established |
-| **Risk Control** | Very strong (seven clarification gates + boundary protection) | Weaker |
+| **Risk Control** | Very strong (seven gates + precision checks + state machine) | Weaker |
 | **Lightweight** | **Pure Skill**, extremely minimal | Often includes frameworks, tests, multi-file |
 
 **One-line summary**:
@@ -80,8 +82,8 @@ I want to build [your vague idea].
 ## Confirmed
 - You want to build a learning management website.
 
-## Next Step
-“Learning management website” is not a clear problem yet. Which learning problem do you want to remove first?
+## Question
+"Learning management website" is not a clear problem yet. Which learning problem do you want to remove first?
 
 A. Not knowing what to study today
 B. Forgetting assignments or deadlines
@@ -91,7 +93,7 @@ D. Not knowing how long you studied or whether you stayed consistent
 Recommendation: Start with A. It is the easiest to turn into a tiny V1: open the page and see what to study today.
 ```
 
-Only after all seven boundaries are confirmed will it output a `Requirements Brief`. If you explicitly ask for an execution prompt, it can then generate a prompt for Codex, Claude Code, or Cursor.
+Only after all seven gates are confirmed and precision checks pass will it output a `Requirements Brief`. If you explicitly ask for an execution prompt, it can then generate a behavior-contract-style prompt for Codex, Claude Code, or Cursor.
 
 ---
 
@@ -130,9 +132,13 @@ docs/
     v0.4.0-socratic-harness-design.md
 skills/
   idea-harness/
-    SKILL.md          # Core Skill
-    EXAMPLES.md       # Real-world examples
-    SMOKE_TESTS.md    # v0.4.0 smoke test checklist
+    SKILL.md             # Core entry (~95 lines)
+    STATE-MACHINE.md     # State definitions, transitions, decision tree priority
+    PRECISION-GATE.md    # Four precision checks
+    OUTPUTS.md           # All output templates
+    VOCABULARY.md        # Internal terms, user-facing language conventions
+    EXAMPLES.md          # Full Chinese/English conversation examples
+    SMOKE_TESTS.md       # v0.5.0 smoke test checklist
 ```
 
 This is a **skill-only** project, kept extremely lightweight. No scripts, no frameworks, no unnecessary features.
