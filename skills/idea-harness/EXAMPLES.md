@@ -2,9 +2,9 @@
 
 这些例子展示普通人在没有技术背景的情况下，如何把一句模糊的小应用想法，一步一步确认成可交给 AI 执行的清楚需求。
 
-v0.4.0 的默认输出保持极简：
+v0.5.0 的默认输出保持极简：
 
-- 澄清阶段只展示 `已确认` 和 `下一步`。
+- 澄清阶段只展示 `已确认` 和 `追问`。
 - Ready 阶段只展示 `需求简报`。
 - 只有用户明确要求时，才额外输出 `执行 Prompt`。
 
@@ -26,7 +26,7 @@ v0.4.0 的默认输出保持极简：
 - 使用场景是平时花了钱后随手记一下。
 - 你希望第一版不要太麻烦。
 
-## 下一步
+## 追问
 你说的“记一下”，记完之后你最想拿这些记录做什么？
 
 A. 就是存着，偶尔翻翻这个月花了多少
@@ -52,7 +52,7 @@ D. 先不想那么多，能记一笔、看到列表就行
 - 第一版要能看到记过的账目列表。
 - 需要固定分类，比如吃饭、交通。
 
-## 下一步
+## 追问
 下次打开时，还要不要看到之前记过的账？
 
 A. 要，保存在当前这个浏览器里
@@ -114,7 +114,7 @@ C. 要，换手机或换电脑也能看到
 - 现在还处在刚开始尝试的阶段。
 - 你的第一目标是看看有没有人想买。
 
-## 下一步
+## 追问
 第一版里，买家看到作品后要怎么购买？
 
 A. 看作品展示页，然后通过微信或手机号联系你
@@ -139,7 +139,7 @@ C. 先跳到小红书、闲鱼等平台再购买
 - 每个作品需要照片和文字介绍。
 - 第一版不需要购物车、支付或订单系统。
 
-## 下一步
+## 追问
 作品资料第一版怎么放进去？
 
 A. 你把作品照片和介绍给制作页面的人，由对方写进页面
@@ -202,7 +202,7 @@ C. 买家也可以上传作品或留言
 - 使用场景是每天学几个新词。
 - 你在意复习效果。
 
-## 下一步
+## 追问
 第一版里的单词从哪里来？
 
 A. 你自己手动输入单词和意思
@@ -226,7 +226,7 @@ C. 读文章或看剧遇到生词时，随手加入自己的单词本
 - 单词来源是平时阅读遇到的生词。
 - 你要自己添加英文单词和中文意思。
 
-## 下一步
+## 追问
 复习时第一版用哪种方式？
 
 A. 翻卡片：先看英文，点一下看中文意思
@@ -250,7 +250,7 @@ C. 两种都要
 - 复习时先看英文，点一下后看到中文意思。
 - 下次打开时，之前加过的单词需要还在。
 
-## 下一步
+## 追问
 复习时单词按什么顺序出现？
 
 A. 最新添加的先出现
@@ -314,7 +314,7 @@ C. 没记住的多出现几次，记住的少出现
 - 你想有一个地方管理粉丝相关信息。
 - 你提到一个明确需求：发内容让粉丝看到。
 
-## 下一步
+## 追问
 你的粉丝现在主要在哪里？
 
 A. 微信群里
@@ -338,7 +338,7 @@ C. 还没有固定地方，想自己建一个
 - 你想建立一个抖音之外的内容发布地方。
 - 第一版重点是你发内容，粉丝能看到。
 
-## 下一步
+## 追问
 你第一版想发布什么内容形式？
 
 A. 文字公告
@@ -364,7 +364,7 @@ D. 付费内容
 - 付费内容以后再说。
 - 你希望粉丝能知道你发了新内容。
 
-## 下一步
+## 追问
 你说的“提醒”，第一版具体指哪一种？
 
 A. 粉丝收藏页面，之后自己打开查看新内容
@@ -427,7 +427,7 @@ C. 发到微信群或公众号里
 - 现在用微信群接龙，信息很乱。
 - 你想做一个工具管理团购。
 
-## 下一步
+## 追问
 微信群接龙最让你头疼的是什么？
 
 A. 不知道谁买了什么、买了多少份
@@ -452,7 +452,7 @@ D. 以上都要
 - 团长需要清楚看到谁买了什么、买了几份。
 - 暂时不处理收款和进度。
 
-## 下一步
+## 追问
 第一版的团购一般怎么组织？
 
 A. 每次只团一个商品，邻居填姓名和份数
@@ -515,14 +515,14 @@ I want to make a to-do list but not like the ones you see everywhere. I want som
 - Core action: type a task and cross it off when done.
 - You do not want categories, due dates, or extra features.
 
-## Next Step
+## Question
 After you cross something off, what should happen to it?
 
 A. It stays visible, crossed out
 B. It disappears from the list
 C. It moves to a separate done section
 
-Recommendation: Start with A. It is the smallest version that still lets you see what you finished.
+Recommended: Start with A. It is the smallest version that still lets you see what you finished.
 ```
 
 ### User Reply
@@ -539,14 +539,14 @@ A, definitely. I like seeing a long list of crossed-out stuff at the end of the 
 - Tasks stay visible after completion, marked as done.
 - V1 does not need categories, due dates, priorities, sharing, or reminders.
 
-## Next Step
+## Question
 Should the list still be there after you close the browser and come back tomorrow?
 
 A. Yes, keep the tasks and done state in the same browser
 B. No, start fresh every time
 C. Yes, and keep it synced across devices
 
-Recommendation: Start with A. It keeps your daily list without needing accounts or sync.
+Recommended: Start with A. It keeps your daily list without needing accounts or sync.
 ```
 
 ### User Reply
@@ -602,7 +602,7 @@ Acceptance criteria:
 - 现在靠微信一条条问、一条条记，很乱。
 - 你想做一个简单预约工具。
 
-## 下一步
+## 追问
 第一版预约时，最需要记清楚哪些信息？
 
 A. 主人是谁、什么时候送来、什么时候接走
@@ -626,7 +626,7 @@ C. 以上信息，再自动计算费用
 - 不需要自动计算费用。
 - 核心问题是替代微信聊天里的混乱记录。
 
-## 下一步
+## 追问
 这个工具第一版由谁来填写预约记录？
 
 A. 只有你自己填写，主人仍然在微信告诉你信息
@@ -688,14 +688,14 @@ I need something to track chores for my kids. They never remember whose turn it 
 - Problem: they do not remember whose turn it is.
 - You want to assign chores and let kids check them off.
 
-## Next Step
+## Question
 What happens after a kid checks off a chore?
 
 A. Nothing extra; you just see it is done
 B. They earn points or rewards
 C. The chore resets on a daily or weekly rotation
 
-Recommendation: Start with A. It solves the referee problem without adding rewards or scheduling rules.
+Recommended: Start with A. It solves the referee problem without adding rewards or scheduling rules.
 ```
 
 ### User Reply
@@ -713,14 +713,14 @@ A is fine for now. I just want to see who's done what without nagging.
 - Kids check chores off.
 - No points, rewards, or rotation for V1.
 
-## Next Step
+## Question
 How will your kids see their chores?
 
 A. One shared list on a family device, with names next to each chore
 B. Each kid gets a separate link or page
 C. Each kid logs into their own account
 
-Recommendation: Start with A. A shared list is simplest for a family device and avoids accounts or separate links.
+Recommended: Start with A. A shared list is simplest for a family device and avoids accounts or separate links.
 ```
 
 ### User Reply

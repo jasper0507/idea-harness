@@ -4,10 +4,10 @@
 
 ## 静态检查
 
-### 内部术语不泄露
+### 用户可见材料不泄露内部术语
 
 ```powershell
-rg -n "Status:|Reason:|## 不能先假设|## Current Conclusion|## Forbidden Assumptions|精确度缺口|阻断条件|Precision Gap|Blocking Condition" skills\idea-harness\SKILL.md skills\idea-harness\EXAMPLES.md README.md README.en.md
+rg -n "Status:|Reason:|## 不能先假设|## Current Conclusion|## Forbidden Assumptions|精确度缺口|阻断条件|Precision Gap|Blocking Condition|Harness Gate" skills\idea-harness\EXAMPLES.md README.md README.en.md
 ```
 
 预期：无输出。
@@ -15,10 +15,13 @@ rg -n "Status:|Reason:|## 不能先假设|## Current Conclusion|## Forbidden Ass
 ### 核心结构存在
 
 ```powershell
-rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Prompt|Harness Gate|PRECISION-GATE|STATE-MACHINE|VOCABULARY|OUTPUTS" skills\idea-harness\SKILL.md
+rg -n "PRECISION-GATE|STATE-MACHINE|VOCABULARY|OUTPUTS" skills\idea-harness\SKILL.md
+rg -n "## 需求简报|## Requirements Brief|## 执行 Prompt|## Execution Prompt|Harness Gate" skills\idea-harness\OUTPUTS.md
+rg -n "gathering|needs-precision|blocked|ready" skills\idea-harness\STATE-MACHINE.md
+rg -n "目标一致性|隐藏默认值|场景走查|矛盾扫描" skills\idea-harness\PRECISION-GATE.md
 ```
 
-预期：有命中，分别对应 v0.5.0 的简报模板引用、执行 Prompt 引用和四个支撑文件引用。
+预期：都有命中，分别对应 v0.5.0 的支撑文件引用、输出模板、状态机和精确度四项检查。
 
 ### SKILL.md 行数
 

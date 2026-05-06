@@ -90,7 +90,7 @@ B. Forgetting assignments or deadlines
 C. Notes and materials are too scattered
 D. Not knowing how long you studied or whether you stayed consistent
 
-Recommendation: Start with A. It is the easiest to turn into a tiny V1: open the page and see what to study today.
+Recommended: Start with A. It is the easiest to turn into a tiny V1: open the page and see what to study today.
 ```
 
 Only after all seven gates are confirmed and precision checks pass will it output a `Requirements Brief`. If you explicitly ask for an execution prompt, it can then generate a behavior-contract-style prompt for Codex, Claude Code, or Cursor.
