@@ -25,7 +25,7 @@ They immediately start **guessing**:
 
 Result: **You get something you didn't want**, or the project collapses entirely.
 
-Andrej Karpathy has pointed out: **LLMs love to make assumptions without confirmation**. Idea Harness is built specifically to address this early-stage pain point.
+The core issue is simple: **when requirements are unclear, LLMs tend to fill in unconfirmed assumptions**. Idea Harness is built specifically to address this early-stage pain point.
 
 ---
 
@@ -33,7 +33,7 @@ Andrej Karpathy has pointed out: **LLMs love to make assumptions without confirm
 
 **Idea Harness does one thing** — **requirements clarification**.
 
-It takes Karpathy's "Think Before Coding" philosophy + Harness Engineering's control loop, and **laser-focuses** them into a lightweight Skill for the earliest stage.
+It takes a "clarify before implementation" workflow + Harness Engineering's control loop, and **laser-focuses** them into a lightweight Skill for the earliest stage.
 
 Core mechanisms:
 - Only acknowledge facts the user explicitly stated or confirmed
@@ -100,7 +100,7 @@ Only after all seven boundaries are confirmed will it output a `Requirements Bri
 - **Narrow is more useful than all-in-one** — specialized for the clarification stage
 - **Ask less, progress more**
 - **Define boundaries first, then let AI implement**
-- Combines **Harness Engineering** (putting reins on AI) + **Karpathy's philosophy** (Think Before Coding)
+- Combines **Harness Engineering** (putting reins on AI) + a **clarify before implementation** workflow
 
 ---
 

@@ -25,7 +25,7 @@
 
 结果就是：**做出来一个你不想要的东西**，或者项目直接崩掉。
 
-Andrej Karpathy 曾指出：**LLM 特别喜欢在没有确认的情况下擅自做假设**。Idea Harness 正是针对这个早期最大痛点而生。
+这个问题的核心是：**LLM 在需求不清时很容易主动补全未确认假设**。Idea Harness 正是针对这个早期最大痛点而生。
 
 ---
 
@@ -33,7 +33,7 @@ Andrej Karpathy 曾指出：**LLM 特别喜欢在没有确认的情况下擅自�
 
 **Idea Harness 只做一件事** —— **需求澄清**。
 
-它把 Karpathy 的"Think Before Coding"哲学 + Harness Engineering 的控制环，**极致窄化**成一个专注早期阶段的轻量 Skill。
+它把“先澄清、再实现”的工作方式 + Harness Engineering 的控制环，**极致窄化**成一个专注早期阶段的轻量 Skill。
 
 核心机制：
 - 只认用户明确说过或确认过的事实
@@ -100,7 +100,7 @@ D. 学了多久、有没有坚持不清楚
 - **窄一点，比全能更有用** —— 专精于澄清阶段
 - **问少一点，比问全更容易推进**
 - **先定边界，再让 AI 实现**
-- 融合 **Harness Engineering**（给 AI 套缰绳） + **Karpathy 哲学**（Think Before Coding）
+- 融合 **Harness Engineering**（给 AI 套缰绳） + **先澄清、再实现** 的工作原则
 
 ---
 
