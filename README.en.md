@@ -36,10 +36,12 @@ Andrej Karpathy has pointed out: **LLMs love to make assumptions without confirm
 It takes Karpathy's "Think Before Coding" philosophy + Harness Engineering's control loop, and **laser-focuses** them into a lightweight Skill for the earliest stage.
 
 Core mechanisms:
-- Only acknowledge facts the user explicitly stated (evidence ledger)
-- Strictly forbid dangerous assumptions
-- Ask exactly **one most critical question** at a time
-- Use `Status: Need More Info` / `Ready` gate control flow
+- Only acknowledge facts the user explicitly stated or confirmed
+- Maintain seven clarification gates internally
+- Ask exactly one critical question by default
+- In `Need More Info`, show only `Confirmed` and `Next Step`
+- In `Ready`, show only the `Requirements Brief` by default
+- Generate an execution prompt for a coding agent only when the user explicitly asks for one
 
 ---
 
@@ -50,7 +52,7 @@ Core mechanisms:
 | **Scope** | **Ultra-narrow** — only does clarification | Full pipeline / execution / code generation |
 | **Core Principle** | **No guessing**, only confirmed facts | Encourages creativity, proactively fills in features |
 | **Stage** | **Step 0 when idea is most vague** | After some clarity is already established |
-| **Risk Control** | Very strong (Status gates + boundary protection) | Weaker |
+| **Risk Control** | Very strong (seven clarification gates + boundary protection) | Weaker |
 | **Lightweight** | **Pure Skill**, extremely minimal | Often includes frameworks, tests, multi-file |
 
 **One-line summary**:
@@ -75,25 +77,21 @@ I want to build [your vague idea].
 **Need More Info stage** (typical output):
 
 ```markdown
-## Current Conclusion
-Status: Need More Info
-Reason: "Learning management website" is too broad — the most likely thing to get wrong is the core management target.
-
 ## Confirmed
 - You want to build a learning management website.
 
-## Forbidden Assumptions
-- Cannot assume it needs login, database, course schedules, points system, etc.
-
 ## Next Step
-What type of learning content do you want to manage first?
-A. Daily learning tasks to complete
-B. Assignments and deadlines
-C. Study notes and materials
-D. Study time and check-in records
+“Learning management website” is not a clear problem yet. Which learning problem do you want to remove first?
+
+A. Not knowing what to study today
+B. Forgetting assignments or deadlines
+C. Notes and materials are too scattered
+D. Not knowing how long you studied or whether you stayed consistent
+
+Recommendation: Start with A. It is the easiest to turn into a tiny V1: open the page and see what to study today.
 ```
 
-Only after all key boundaries (goal, user, core flow, V1 scope, non-goals, etc.) are confirmed will it output `Status: Ready`.
+Only after all seven boundaries are confirmed will it output a `Requirements Brief`. If you explicitly ask for an execution prompt, it can then generate a prompt for Codex, Claude Code, or Cursor.
 
 ---
 
@@ -127,10 +125,14 @@ Only after all key boundaries (goal, user, core flow, V1 scope, non-goals, etc.)
 README.md
 README.en.md
 LICENSE
+docs/
+  designs/
+    v0.4.0-socratic-harness-design.md
 skills/
   idea-harness/
-    SKILL.md          # Core Skill (minimal)
-    EXAMPLES.md       # Real-world usage examples (continuously updated)
+    SKILL.md          # Core Skill
+    EXAMPLES.md       # Real-world examples
+    SMOKE_TESTS.md    # v0.4.0 smoke test checklist
 ```
 
 This is a **skill-only** project, kept extremely lightweight. No scripts, no frameworks, no unnecessary features.
