@@ -1,109 +1,127 @@
 # Idea Harness
 
-> A deliberately narrow agent skill: turn a non-programmer's one-line "small app idea" into something clear enough for AI to continue, before it starts inventing requirements.
+> **Most vague ideas die in the AI's first round of guessing.**
+> Idea Harness puts a **harness on AI** right at this step.
 
-Most small apps do not fail at the code. They fail in the first round of guessing.
+**An ultra-focused Clarification Skill**: turns a non-programmer's vague "small app idea" into requirements that AI can safely execute — **without guessing**.
 
-The user says:
+[简体中文](README.md) | English
+
+---
+
+## The Problem
+
+Most AI Coding Agents (Claude Code, Cursor, Codex, etc.) encounter inputs like:
 
 ```text
 I want to build a learning management website.
+I want to make an expense tracking app.
+I want to create a family chore tracker.
 ```
 
-An agent can easily add accounts, schedules, task boards, databases, charts, reminders, permissions, and deployment plans, then start building something the user never asked for.
+They immediately start **guessing**:
+- Account systems, databases, push notifications, analytics dashboards, admin panels...
+- Features and complex architectures you never asked for
 
-Idea Harness does very little: before planning or coding, it forces the agent to clarify the goal, user, first-version scope, and acceptance criteria.
+Result: **You get something you didn't want**, or the project collapses entirely.
 
-## What It Solves
+Andrej Karpathy has pointed out: **LLMs love to make assumptions without confirmation**. Idea Harness is built specifically to address this early-stage pain point.
 
-Idea Harness is for people who do not have a requirements document yet. It is not for teams that already have a PRD, technical plan, or product roadmap.
+---
 
-It helps the agent:
+## The Solution
 
-- Record only facts the user explicitly said or confirmed.
-- Put risky guesses into `Forbidden Assumptions`.
-- Ask one question at a time, choosing the question that best reduces wrong direction and giving a recommended answer.
-- Stay at `Need More Info` until the scope is clear.
-- Output an `Execution Prompt` only when the first-version boundary is clear enough for the next agent to act on.
+**Idea Harness does one thing** — **requirements clarification**.
 
-## Quick Start
+It takes Karpathy's "Think Before Coding" philosophy + Harness Engineering's control loop, and **laser-focuses** them into a lightweight Skill for the earliest stage.
 
-Give this skill directory to an agent that supports `SKILL.md`:
+Core mechanisms:
+- Only acknowledge facts the user explicitly stated (evidence ledger)
+- Strictly forbid dangerous assumptions
+- Ask exactly **one most critical question** at a time
+- Use `Status: Need More Info` / `Ready` gate control flow
 
-```text
-skills/idea-harness/SKILL.md
-```
+---
 
-Then start like this:
+## Key Differentiators
+
+| Dimension | Idea Harness | Most Other Skills / Agents |
+|-----------|--------------|---------------------------|
+| **Scope** | **Ultra-narrow** — only does clarification | Full pipeline / execution / code generation |
+| **Core Principle** | **No guessing**, only confirmed facts | Encourages creativity, proactively fills in features |
+| **Stage** | **Step 0 when idea is most vague** | After some clarity is already established |
+| **Risk Control** | Very strong (Status gates + boundary protection) | Weaker |
+| **Lightweight** | **Pure Skill**, extremely minimal | Often includes frameworks, tests, multi-file |
+
+**One-line summary**:
+Others teach AI **how to do it**. Idea Harness teaches AI to **ask first, then do**.
+
+---
+
+## Quick Start (30 seconds)
+
+1. Load `skills/idea-harness/SKILL.md` into your Agent (Claude Code, Cursor, or any tool that supports Skills)
+2. Start chatting:
 
 ```text
 Use idea-harness to clarify my small app idea first.
-I want to build a learning management website.
+I want to build [your vague idea].
 ```
 
-You will not immediately get a heavy requirements document. You will first get a judgment: whether the idea is already clear enough to continue.
+---
 
-## What Output Looks Like
+## Output Example
 
-If the information is not enough, it stays at `Need More Info`:
+**Need More Info stage** (typical output):
 
 ```markdown
 ## Current Conclusion
 Status: Need More Info
-Reason: "Learning management website" is still too broad. The easiest place to go wrong is deciding what kind of learning content it manages first.
+Reason: "Learning management website" is too broad — the most likely thing to get wrong is the core management target.
 
 ## Confirmed
 - You want to build a learning management website.
 
 ## Forbidden Assumptions
-- Do not assume it is a task manager, class schedule, notes library, login product, database product, or analytics dashboard.
+- Cannot assume it needs login, database, course schedules, points system, etc.
 
 ## Next Step
-What kind of learning content do you want to manage first?
-A. Daily study tasks
+What type of learning content do you want to manage first?
+A. Daily learning tasks to complete
 B. Assignments and deadlines
-C. Study notes or resources
-D. Study time and check-ins
-
-Recommendation: If you are not sure yet, start with A because it is the easiest to narrow into a small first version.
+C. Study notes and materials
+D. Study time and check-in records
 ```
 
-Only after the goal, user, core flow, V1 must-haves, V1 non-goals, data behavior, and acceptance criteria are confirmed will it move to `Ready` and output an `Execution Prompt` containing only confirmed requirements.
+Only after all key boundaries (goal, user, core flow, V1 scope, non-goals, etc.) are confirmed will it output `Status: Ready`.
 
-## When To Use It
+---
 
-Use it when:
+## Design Philosophy
 
-- The user has a fuzzy one-line idea, such as "I want to build a booking mini app."
-- The user is not a programmer and does not know how to write requirements.
-- The user wants a very small first version, not a full product.
-- The agent must avoid adding unconfirmed login, databases, admin panels, AI features, dashboards, deployment, or other heavy assumptions.
-- The user wants to grill an app idea, clarify requirements before code, or turn a fuzzy idea into an AI execution prompt.
+- **Narrow is more useful than all-in-one** — specialized for the clarification stage
+- **Ask less, progress more**
+- **Define boundaries first, then let AI implement**
+- Combines **Harness Engineering** (putting reins on AI) + **Karpathy's philosophy** (Think Before Coding)
 
-Do not use it when:
+---
 
-- There is already a clear PRD and the next step is task breakdown or coding.
-- The job is to choose a tech stack, design architecture, build a database, or plan deployment.
-- The user needs business model, growth, operations, pricing, or full product consulting.
-- The goal is to inflate a simple idea into a heavy product plan.
+## When to Use
 
-## How It Works
+**Recommended**:
+- You only have a vague idea
+- You're a non-technical person who doesn't know how to turn an idea into requirements
+- You want to build a **tiny but correct** first version
+- You're afraid AI will take over and add unwanted features
 
-Idea Harness runs a lightweight harness loop internally:
+**Not suitable**:
+- You already have a clear PRD
+- You need to immediately write code or choose a tech stack
+- You need business model planning or full product roadmapping
 
-```text
-User idea
-  -> Extract confirmed facts
-  -> Find missing boundaries
-  -> Block risky assumptions
-  -> Ask one key question and recommend an answer
-  -> Repeat until Ready
-  -> Output Execution Prompt
-```
+---
 
-It does not expand the user's idea like a product manager, and it does not jump into engineering. Its value is blocking the places where an agent could guess and surfacing the places where it must ask.
-
-## Repository Shape
+## Project Structure
 
 ```text
 README.md
@@ -111,15 +129,19 @@ README.en.md
 LICENSE
 skills/
   idea-harness/
-    SKILL.md
-    EXAMPLES.md
+    SKILL.md          # Core Skill (minimal)
+    EXAMPLES.md       # Real-world usage examples (continuously updated)
 ```
 
-This is a skill-only repository. It has no runtime, test project, platform manifest, or installer.
+This is a **skill-only** project, kept extremely lightweight. No scripts, no frameworks, no unnecessary features.
 
-## Design Principles
+---
 
-- Narrow is more useful than universal.
-- Fewer questions are easier to answer than exhaustive questionnaires.
-- Define the first-version boundary before asking AI to build.
-- Unconfirmed features are not inspiration. They are risk.
+## Contributing
+
+Submit your **real vague ideas + clarification process**, and I'll add them to EXAMPLES.md to help more people.
+
+---
+
+**License**: MIT
+**Author**: jasper0507
