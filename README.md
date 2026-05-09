@@ -121,35 +121,22 @@ D. 学了多久、有没有坚持不清楚
 ```text
 skills/idea-harness/
   SKILL.md             # 核心入口
-  STATE-MACHINE.md     # 状态定义、转移规则、决策树优先级
-  PRECISION-GATE.md    # 精确度四项检查
-  OUTPUTS.md           # 所有输出模板
-  VOCABULARY.md        # 内部术语、用户用语规范
-  EXAMPLES.md          # 完整中英文对话示例
-README.md              # 中文说明
-README.en.md           # English
-CONTRIBUTING.md        # 贡献指南
-SECURITY.md            # 安全披露
-CODE_OF_CONDUCT.md     # 社区准则
-LICENSE                # MIT
-CHANGELOG.md           # 版本历史
-SMOKE_TESTS.md         # 冒烟测试清单
-scripts/verify.sh      # 静态冒烟检查（POSIX / CI）
-scripts/verify.ps1     # 静态冒烟检查（Windows）
-.markdownlint-cli2.yaml
-_typos.toml
-lychee.toml
-.pre-commit-config.yaml
-.github/               # workflows、Issue/PR 模板、dependabot
+  STATE-MACHINE.md     # 状态机
+  PRECISION-GATE.md    # 精确度检查
+  OUTPUTS.md           # 输出模板
+  VOCABULARY.md        # 用语规范
+  EXAMPLES.md          # 完整对话示例
+CLAUDE.md              # 给 AI agent 的仓库说明
+scripts/verify.sh      # 静态冒烟检查
 ```
 
-这是一个 **skill-only** 项目：无应用框架与依赖，仅 Markdown + 最小校验脚本。
+Skill-only 项目：无依赖，只有 Markdown + 一个校验脚本。
 
 ---
 
 ## 贡献
 
-请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)（PR 标题格式、本地校验、Release 流程）。欢迎提交你用过的**真实模糊想法 + 澄清过程**，也可通过 Issue 模板「贡献真实澄清案例」或直接 PR 更新 `skills/idea-harness/EXAMPLES.md`。
+欢迎提交你用过的**真实模糊想法 + 澄清过程**，直接 PR 更新 `skills/idea-harness/EXAMPLES.md` 即可。
 
 ---
 

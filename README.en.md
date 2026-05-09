@@ -121,35 +121,22 @@ Only after all seven gates are confirmed and precision checks pass will it outpu
 ```text
 skills/idea-harness/
   SKILL.md             # Core entry
-  STATE-MACHINE.md     # State definitions, transitions, decision tree priority
-  PRECISION-GATE.md    # Four precision checks
-  OUTPUTS.md           # All output templates
-  VOCABULARY.md        # Internal terms, user-facing language conventions
-  EXAMPLES.md          # Full Chinese/English conversation examples
-README.md              # Chinese docs
-README.en.md           # English docs
-CONTRIBUTING.md        # Contributing guide
-SECURITY.md            # Security policy
-CODE_OF_CONDUCT.md     # Community guidelines
-LICENSE                # MIT
-CHANGELOG.md           # Version history
-SMOKE_TESTS.md         # Smoke test checklist
-scripts/verify.sh      # Static smoke checks (POSIX / CI)
-scripts/verify.ps1     # Static smoke checks (Windows)
-.markdownlint-cli2.yaml
-_typos.toml
-lychee.toml
-.pre-commit-config.yaml
-.github/               # workflows, issue/PR templates, dependabot
+  STATE-MACHINE.md     # State machine
+  PRECISION-GATE.md    # Precision checks
+  OUTPUTS.md           # Output templates
+  VOCABULARY.md        # Language conventions
+  EXAMPLES.md          # Full conversation examples
+CLAUDE.md              # Repo context for AI agents
+scripts/verify.sh      # Static smoke checks
 ```
 
-This is a **skill-only** project: no app framework or dependencies — only Markdown + minimal verification scripts.
+Skill-only project: no dependencies — just Markdown + one verification script.
 
 ---
 
 ## Contributing
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) first (PR title format, local checks, releases). Submit **real vague ideas + clarification process** via the issue template, or open a PR updating `skills/idea-harness/EXAMPLES.md`.
+Submit your **real vague ideas + clarification process** — just open a PR updating `skills/idea-harness/EXAMPLES.md`.
 
 ---
 

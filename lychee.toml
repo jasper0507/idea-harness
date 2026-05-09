@@ -1,4 +1,0 @@
-# Lychee — avoid flaky runner connectivity to contributor-covenant.org (RST / resets).
-# Policy links remain in CODE_OF_CONDUCT.md for humans; CI skips live checks for this host.
-
-exclude = ["^https://www\\.contributor-covenant\\.org/"]
