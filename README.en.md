@@ -1,9 +1,13 @@
 # Idea Harness
 
+[![CI](https://github.com/jasper0507/idea-harness/actions/workflows/verify.yml/badge.svg)](https://github.com/jasper0507/idea-harness/actions/workflows/verify.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/jasper0507/idea-harness)](https://github.com/jasper0507/idea-harness/releases)
+
 > **Most vague ideas die in the AI's first round of guessing.**
 > Idea Harness puts a **harness on AI** right at this step.
 
-**An ultra-focused Clarification Skill**: turns a non-programmer's vague "small app idea" into requirements that AI can safely execute — **without guessing**.
+Turns a non-programmer's vague "small app idea" into requirements that AI can safely execute — **without guessing**.
 
 [简体中文](README.md) | English
 
@@ -11,61 +15,60 @@
 
 ## The Problem
 
-Most AI Coding Agents (Claude Code, Cursor, Codex, etc.) encounter inputs like:
+AI Coding Agents encounter "I want to build an expense tracking app" and immediately start guessing — accounts, databases, push notifications… You get something you didn't want.
 
-```text
-I want to build a learning management website.
-I want to make an expense tracking app.
-I want to create a family chore tracker.
-```
-
-They immediately start **guessing**:
-- Account systems, databases, push notifications, analytics dashboards, admin panels...
-- Features and complex architectures you never asked for
-
-Result: **You get something you didn't want**, or the project collapses entirely.
-
-The core issue is simple: **when requirements are unclear, LLMs tend to fill in unconfirmed assumptions**. Idea Harness is built specifically to address this early-stage pain point.
-
----
+The core issue: **when requirements are unclear, LLMs tend to fill in unconfirmed assumptions.**
 
 ## The Solution
 
-**Idea Harness does one thing** — **requirements clarification**.
+**Idea Harness does one thing — requirements clarification.**
 
-It takes a "clarify before implementation" workflow + Harness Engineering's control loop, and **laser-focuses** them into a lightweight Skill for the earliest stage.
-
-Core mechanisms:
 - Only acknowledge facts the user explicitly stated or confirmed
-- Maintain seven clarification gates as a decision tree, not a linear checklist
+- Seven clarification gates as a decision tree, not a linear checklist
 - Four precision checks catch requirements that look complete but aren't precise enough
 - Hard state machine: `gathering` → `needs-precision` → `blocked` → `ready`
 - Ask exactly one critical question by default
-- In `Need More Info`, show only `Confirmed` and `Question`
-- In `Ready`, show only the `Requirements Brief` by default
-- Generate a behavior-contract-style execution prompt only when the user explicitly asks
+- Output a requirements brief only when Ready; generate an execution prompt only on explicit request
 
 ---
 
-## Key Differentiators
+## Quick Start
 
-| Dimension | Idea Harness | Most Other Skills / Agents |
-|-----------|--------------|---------------------------|
-| **Scope** | **Ultra-narrow** — only does clarification | Full pipeline / execution / code generation |
-| **Core Principle** | **No guessing**, only confirmed facts | Encourages creativity, proactively fills in features |
-| **Stage** | **Step 0 when idea is most vague** | After some clarity is already established |
-| **Risk Control** | Very strong (seven gates + precision checks + state machine) | Weaker |
-| **Lightweight** | **Pure Skill**, extremely minimal | Often includes frameworks, tests, multi-file |
+### 1. Get the skill
 
-**One-line summary**:
-Others teach AI **how to do it**. Idea Harness teaches AI to **ask first, then do**.
+```bash
+git clone https://github.com/jasper0507/idea-harness.git
+```
 
----
+### 2. Load into your AI tool
 
-## Quick Start (30 seconds)
+**Claude Code**
+```bash
+cp -r idea-harness/skills/idea-harness ~/.claude/skills/
+```
 
-1. Load `skills/idea-harness/SKILL.md` into your Agent (Claude Code, Cursor, or any tool that supports Skills)
-2. Start chatting:
+**Cursor**
+```bash
+cp -r idea-harness/skills/idea-harness .cursor/skills/
+```
+
+**Codex (OpenAI)**
+```bash
+# Reference in your project's AGENTS.md
+echo "Read and follow skills/idea-harness/SKILL.md when clarifying app ideas." >> AGENTS.md
+```
+
+**Hermes Agent**
+```bash
+cp -r idea-harness/skills/idea-harness ~/.hermes/skills/
+```
+
+**OpenClaw**
+```bash
+cp -r idea-harness/skills/idea-harness ~/.openclaw/skills/
+```
+
+### 3. Start chatting
 
 ```text
 Use idea-harness to clarify my small app idea first.
@@ -76,7 +79,7 @@ I want to build [your vague idea].
 
 ## Output Example
 
-**Need More Info stage** (typical output):
+**Need More Info stage**:
 
 ```markdown
 ## Confirmed
@@ -93,7 +96,7 @@ D. Not knowing how long you studied or whether you stayed consistent
 Recommended: Start with A. It is the easiest to turn into a tiny V1: open the page and see what to study today.
 ```
 
-Only after all seven gates are confirmed and precision checks pass will it output a `Requirements Brief`. If you explicitly ask for an execution prompt, it can then generate a behavior-contract-style prompt for Codex, Claude Code, or Cursor.
+Only after all seven gates are confirmed and precision checks pass will it output a Requirements Brief. An execution prompt is generated only when you explicitly ask.
 
 ---
 
@@ -102,57 +105,45 @@ Only after all seven gates are confirmed and precision checks pass will it outpu
 - **Narrow is more useful than all-in-one** — specialized for the clarification stage
 - **Ask less, progress more**
 - **Define boundaries first, then let AI implement**
-- Combines **Harness Engineering** (putting reins on AI) + a **clarify before implementation** workflow
 
 ---
 
 ## When to Use
 
-**Recommended**:
-- You only have a vague idea
-- You're a non-technical person who doesn't know how to turn an idea into requirements
-- You want to build a **tiny but correct** first version
-- You're afraid AI will take over and add unwanted features
+**Recommended**: You only have a vague idea · Non-technical person turning idea into requirements · Want a tiny but correct V1 · Afraid AI will add unwanted features
 
-**Not suitable**:
-- You already have a clear PRD
-- You need to immediately write code or choose a tech stack
-- You need business model planning or full product roadmapping
+**Not suitable**: You already have a clear PRD · Need to write code now · Need business model planning
 
 ---
 
 ## Project Structure
 
 ```text
-README.md
-README.en.md
-LICENSE
-CHANGELOG.md
-scripts/
-  verify.sh            # POSIX: static smoke checks (same as CI)
-  verify.ps1           # Windows: same checks
-.github/workflows/
-  verify.yml           # Run verify.sh on push / PR
-skills/
-  idea-harness/
-    SKILL.md             # Core entry (~95 lines)
-    STATE-MACHINE.md     # State definitions, transitions, decision tree priority
-    PRECISION-GATE.md    # Four precision checks
-    OUTPUTS.md           # All output templates
-    VOCABULARY.md        # Internal terms, user-facing language conventions
-    EXAMPLES.md          # Full Chinese/English conversation examples
-    SMOKE_TESTS.md       # Smoke test checklist (static commands; automation in scripts/)
+skills/idea-harness/
+  SKILL.md             # Core entry
+  STATE-MACHINE.md     # State definitions, transitions, decision tree priority
+  PRECISION-GATE.md    # Four precision checks
+  OUTPUTS.md           # All output templates
+  VOCABULARY.md        # Internal terms, user-facing language conventions
+  EXAMPLES.md          # Full Chinese/English conversation examples
+README.md              # Chinese docs
+README.en.md           # English docs
+LICENSE                # MIT
+CHANGELOG.md           # Version history
+SMOKE_TESTS.md         # Smoke test checklist
+scripts/verify.sh      # Static smoke checks (POSIX / CI)
+scripts/verify.ps1     # Static smoke checks (Windows)
+.github/workflows/     # CI
 ```
 
-This is a **skill-only** project: no app framework or dependencies—only minimal scripts for verification and CI.
+This is a **skill-only** project: no app framework or dependencies — only Markdown + minimal verification scripts.
 
 ---
 
 ## Contributing
 
-Submit your **real vague ideas + clarification process**, and I'll add them to EXAMPLES.md to help more people.
+Submit your **real vague ideas + clarification process**, and I'll add them to EXAMPLES.md.
 
 ---
 
-**License**: MIT
-**Author**: jasper0507
+**License**: MIT　·　**Author**: jasper0507

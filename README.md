@@ -1,9 +1,13 @@
 # Idea Harness
 
+[![CI](https://github.com/jasper0507/idea-harness/actions/workflows/verify.yml/badge.svg)](https://github.com/jasper0507/idea-harness/actions/workflows/verify.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/jasper0507/idea-harness)](https://github.com/jasper0507/idea-harness/releases)
+
 > **大多数模糊想法死在 AI 第一轮脑补。**
 > Idea Harness 专门在这一步给 AI **套上缰绳**。
 
-**一个极窄的澄清 Skill**：把非程序员一句模糊的"小应用想法"，**澄清到 AI 可以安全执行、但绝不乱猜** 的程度。
+把非程序员一句模糊的"小应用想法"，**澄清到 AI 可以安全执行、但绝不乱猜** 的程度。
 
 简体中文 | [English](README.en.md)
 
@@ -11,61 +15,60 @@
 
 ## 问题
 
-当前大多数 AI Coding Agent（Claude Code、Cursor、Codex 等）遇到下面这类输入时：
+AI Coding Agent 遇到"我想做一个记账 App"这类输入时，会立刻脑补账号系统、数据库、推送通知……结果做出来一个你不想要的东西。
 
-```text
-我想做一个学习管理网站。
-我想做一个记账 App。
-我想做一个家庭任务打卡工具。
-```
-
-它们会立刻开始**脑补**：
-- 账号系统、数据库、推送通知、统计图表、后台管理……
-- 各种你根本没想要的功能和复杂架构
-
-结果就是：**做出来一个你不想要的东西**，或者项目直接崩掉。
-
-这个问题的核心是：**LLM 在需求不清时很容易主动补全未确认假设**。Idea Harness 正是针对这个早期最大痛点而生。
-
----
+核心原因：**LLM 在需求不清时很容易主动补全未确认假设。**
 
 ## 解决方案
 
-**Idea Harness 只做一件事** —— **需求澄清**。
+**Idea Harness 只做一件事 —— 需求澄清。**
 
-它把"先澄清、再实现"的工作方式 + Harness Engineering 的控制环，**极致窄化**成一个专注早期阶段的轻量 Skill。
-
-核心机制：
 - 只认用户明确说过或确认过的事实
-- 内部维护七个澄清门槛，按决策树而非线性清单检查
+- 七个澄清门槛，按决策树而非线性清单检查
 - 四项精确度检查拦住"表面完整但不够精确"的需求
-- 硬状态机驱动：`gathering` → `needs-precision` → `blocked` → `ready`
+- 硬状态机：`gathering` → `needs-precision` → `blocked` → `ready`
 - 默认每次只问一个最关键的问题
-- `Need More Info` 阶段只展示 `已确认` 和 `追问`
-- `Ready` 阶段默认只展示 `需求简报`
-- 只有用户明确要求时，才生成行为契约风格的执行 Prompt
+- Ready 后才输出需求简报；执行 Prompt 仅在用户明确要求时生成
 
 ---
 
-## 与其他 Skill 的核心区别
+## 快速上手
 
-| 维度 | Idea Harness | 大多数其他 Skill / Agent |
-|------|--------------|-------------------------|
-| **定位** | **极窄** - 只做需求澄清 | 全流程 / 执行 / 代码生成 |
-| **核心原则** | **严禁脑补**，只认已确认事实 | 鼓励创意、主动补全功能 |
-| **适用阶段** | **想法最模糊的第 0 步** | 已经有一定清晰度之后 |
-| **风险控制** | 极强（七个门槛 + 精确度检查 + 状态机） | 较弱 |
-| **轻量程度** | **纯 Skill**，极致轻量 | 常带框架、测试、多文件 |
+### 1. 获取 skill
 
-**一句话总结**：
-别人教 AI **怎么做**，Idea Harness 教 AI **先问清楚再做**。
+```bash
+git clone https://github.com/jasper0507/idea-harness.git
+```
 
----
+### 2. 加载到你的 AI 工具
 
-## 快速上手（30 秒）
+**Claude Code**
+```bash
+cp -r idea-harness/skills/idea-harness ~/.claude/skills/
+```
 
-1. 把 `skills/idea-harness/SKILL.md` 加载到你的 Agent（Claude Code / Cursor 等支持 Skill 的工具）
-2. 开始对话：
+**Cursor**
+```bash
+cp -r idea-harness/skills/idea-harness .cursor/skills/
+```
+
+**Codex (OpenAI)**
+```bash
+# 在项目根目录的 AGENTS.md 中引用
+echo "Read and follow skills/idea-harness/SKILL.md when clarifying app ideas." >> AGENTS.md
+```
+
+**Hermes Agent**
+```bash
+cp -r idea-harness/skills/idea-harness ~/.hermes/skills/
+```
+
+**OpenClaw**
+```bash
+cp -r idea-harness/skills/idea-harness ~/.openclaw/skills/
+```
+
+### 3. 开始对话
 
 ```text
 使用 idea-harness 先澄清我的小应用想法。
@@ -76,7 +79,7 @@
 
 ## 输出示例
 
-**Need More Info 阶段**（典型输出）：
+**Need More Info 阶段**：
 
 ```markdown
 ## 已确认
@@ -93,7 +96,7 @@ D. 学了多久、有没有坚持不清楚
 推荐：先选 A。它最容易收成一个很小的第一版：打开后只处理今天该做什么。
 ```
 
-只有七个门槛全部确认且精确度检查通过后，才会输出 `需求简报`。如果你明确要求"生成执行 Prompt"，它才会额外生成可交给 Codex、Claude Code 或 Cursor 的执行 Prompt。
+七个门槛全部确认且精确度检查通过后输出需求简报。用户明确要求时才生成执行 Prompt。
 
 ---
 
@@ -102,57 +105,45 @@ D. 学了多久、有没有坚持不清楚
 - **窄一点，比全能更有用** —— 专精于澄清阶段
 - **问少一点，比问全更容易推进**
 - **先定边界，再让 AI 实现**
-- 融合 **Harness Engineering**（给 AI 套缰绳） + **先澄清、再实现** 的工作原则
 
 ---
 
 ## 使用场景
 
-**推荐使用**：
-- 你只有一句模糊想法
-- 你是技术小白，不知道怎么把 idea 变成需求
-- 你想做一个**极小但正确**的第一版
-- 你害怕 AI 自作主张
+**推荐**：只有一句模糊想法 · 技术小白想把 idea 变成需求 · 想做极小但正确的第一版 · 害怕 AI 自作主张
 
-**不适合**：
-- 已经有清晰 PRD
-- 需要立即写代码或选技术栈
-- 需要商业模式或完整产品规划
+**不适合**：已有清晰 PRD · 需要立即写代码 · 需要商业模式规划
 
 ---
 
 ## 项目结构
 
 ```text
-README.md
-README.en.md
-LICENSE
-CHANGELOG.md
-scripts/
-  verify.sh            # POSIX：静态冒烟检查（与 CI 相同）
-  verify.ps1           # Windows：同上
-.github/workflows/
-  verify.yml           # 推送 / PR 自动跑 verify.sh
-skills/
-  idea-harness/
-    SKILL.md             # 核心入口（~95 行）
-    STATE-MACHINE.md     # 状态定义、转移规则、决策树优先级
-    PRECISION-GATE.md    # 精确度四项检查
-    OUTPUTS.md           # 所有输出模板
-    VOCABULARY.md        # 内部术语、用户用语规范
-    EXAMPLES.md          # 完整中英文对话示例
-    SMOKE_TESTS.md       # 冒烟测试清单（含静态检查命令；自动化见 scripts/）
+skills/idea-harness/
+  SKILL.md             # 核心入口
+  STATE-MACHINE.md     # 状态定义、转移规则、决策树优先级
+  PRECISION-GATE.md    # 精确度四项检查
+  OUTPUTS.md           # 所有输出模板
+  VOCABULARY.md        # 内部术语、用户用语规范
+  EXAMPLES.md          # 完整中英文对话示例
+README.md              # 中文说明
+README.en.md           # English
+LICENSE                # MIT
+CHANGELOG.md           # 版本历史
+SMOKE_TESTS.md         # 冒烟测试清单
+scripts/verify.sh      # 静态冒烟检查（POSIX / CI）
+scripts/verify.ps1     # 静态冒烟检查（Windows）
+.github/workflows/     # CI
 ```
 
-这是一个 **skill-only** 项目：无应用框架与依赖，仅附带用于校验与 CI 的最小脚本。
+这是一个 **skill-only** 项目：无应用框架与依赖，仅 Markdown + 最小校验脚本。
 
 ---
 
 ## 贡献
 
-欢迎提交你用过的**真实模糊想法 + 澄清过程**，我会加入 EXAMPLES.md，帮助更多人。
+欢迎提交你用过的**真实模糊想法 + 澄清过程**，我会加入 EXAMPLES.md。
 
 ---
 
-**许可证**: MIT
-**作者**: jasper0507
+**许可证**: MIT　·　**作者**: jasper0507

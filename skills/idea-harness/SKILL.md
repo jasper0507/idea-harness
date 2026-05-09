@@ -1,6 +1,11 @@
 ---
 name: idea-harness
-description: Strict Socratic requirements controller for non-programmer small app ideas. Clarifies fuzzy ideas into a minimal requirements brief or execution prompt. Use when user has a rough app/website/tool idea or asks to clarify/grill an idea, 先别写代码, 问清楚需求, 澄清需求, 小应用想法, 模糊想法整理, or 变成给 AI 执行的 prompt.
+description: >
+  Strict Socratic requirements controller — clarifies a non-programmer's
+  vague small-app idea into a minimal requirements brief.
+  Use when: user has a rough app/tool idea, asks to clarify requirements,
+  先别写代码, 问清楚需求, 澄清需求, 小应用想法, 模糊想法整理,
+  变成给 AI 执行的 prompt.
 ---
 
 # Idea Harness
@@ -35,8 +40,8 @@ description: Strict Socratic requirements controller for non-programmer small ap
 3. **使用背景 / 场景** — 什么时候打开、什么情况下用、用前用后发生什么。
 4. **第一版主动作** — V1 只完成哪一个主要动作。多个时追问先做哪个。
 5. **数据行为** — 输入什么、显示什么、保存什么。除非用户确认，不得推断账号、云同步、数据库或后端。
-6. **不做事项 / 范围边界** — V1 不做什么，附带原因。Ready 简报和执行 Prompt 必须使用同一组边界，不得在执行 Prompt 阶段新增具名禁止项。默认阻止列表见下。
-7. **验收标准** — 可检查的动作或可见结果。每条标准必须包含触发动作和可见结果；涉及保存、搜索、权限、隔离、同步、过滤时，必须写清检查方式。不接受"简单""好看""智能""能用"。
+6. **不做事项 / 范围边界** — V1 不做什么，附带原因。默认阻止列表见下。
+7. **验收标准** — 可检查的动作或可见结果。每条标准必须包含触发动作和可见结果；不接受"简单""好看""智能""能用"。
 
 ### 默认阻止列表
 
@@ -80,15 +85,13 @@ description: Strict Socratic requirements controller for non-programmer small ap
 - 答案冲突 → 两句话并排，只问"哪个是你真正要的"。
 - 不问实现细节，除非直接影响用户体验且用户能理解。
 - 不问用户不可能回答的问题。
-- 每个问题都必须对"帮他做下一个决定"有直接贡献。
 
 ## 参考文件
 
 | 文件 | 内容 |
 |------|------|
-| STATE-MACHINE.md | 状态定义、转移规则、阻断条件、决策树优先级 |
+| STATE-MACHINE.md | 状态定义、转移规则、决策树优先级 |
 | PRECISION-GATE.md | 精确度四项检查、判定规则、追问策略 |
-| OUTPUTS.md | Need More Info / 需求简报 / Harness Gate / 执行 Prompt 模板 |
-| VOCABULARY.md | 内部术语、用户用语规范、歧义词表、避免用词 |
+| OUTPUTS.md | 所有输出模板 |
+| VOCABULARY.md | 内部术语、用户用语规范 |
 | EXAMPLES.md | 完整中英文对话示例 |
-| SMOKE_TESTS.md | 冒烟测试清单 |
