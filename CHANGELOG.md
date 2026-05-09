@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.1 - 2026-05-09
+
+### CI
+
+- 新增 `lychee.toml`：`contributor-covenant.org` 在 Actions runner 上偶发连接重置，链接检查对该域名跳过校验。
+
+---
+
 ## v1.1.0 - 2026-05-09
 
 工程化与社区基建：自动化校验、依赖更新与 Release，不改变 skill 行为契约。

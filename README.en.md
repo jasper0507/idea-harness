@@ -138,6 +138,7 @@ scripts/verify.sh      # Static smoke checks (POSIX / CI)
 scripts/verify.ps1     # Static smoke checks (Windows)
 .markdownlint-cli2.yaml
 _typos.toml
+lychee.toml
 .pre-commit-config.yaml
 .github/               # workflows, issue/PR templates, dependabot
 ```

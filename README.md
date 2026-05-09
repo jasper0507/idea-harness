@@ -138,6 +138,7 @@ scripts/verify.sh      # 静态冒烟检查（POSIX / CI）
 scripts/verify.ps1     # 静态冒烟检查（Windows）
 .markdownlint-cli2.yaml
 _typos.toml
+lychee.toml
 .pre-commit-config.yaml
 .github/               # workflows、Issue/PR 模板、dependabot
 ```
