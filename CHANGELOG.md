@@ -4,6 +4,8 @@
 
 苏格拉底式澄清收底：精简示例、对齐输出模板与文档定位。
 
+- GitHub Release：https://github.com/jasper0507/idea-harness/releases/tag/v2.1.0
+
 - `skills/idea-harness/SKILL.md`：强调「约束下游 + 帮用户自己想清楚」；反对选择题轰炸式追问。
 - `skills/idea-harness/OUTPUTS.md`：Need More Info 默认开放追问，选项仅在明确取舍时出现。
 - `skills/idea-harness/EXAMPLES.md`：重写为两条深路径示例（中文背单词 / 英文读书会投票），覆盖 needs-precision 与 blocked。
