@@ -79,21 +79,28 @@ I want to build [your vague idea].
 
 ## Output Example
 
-**Need More Info stage**:
+**Socratic questioning** — not a multiple-choice survey, but helping you see what you haven't thought through:
 
 ```markdown
 ## Confirmed
-- You want to build a learning management website.
+- You run a monthly book club with friends.
+- Choosing the next book causes arguments.
+- You want a voting tool to settle it.
 
 ## Question
-"Learning management website" is not a clear problem yet. Which learning problem do you want to remove first?
+Imagine you built this and shared it with your book club, but after one month nobody used it again. What's the most likely reason?
+```
 
-A. Not knowing what to study today
-B. Forgetting assignments or deadlines
-C. Notes and materials are too scattered
-D. Not knowing how long you studied or whether you stayed consistent
+When a user's answer hides an untested assumption, the skill calls it out:
 
-Recommended: Start with A. It is the easiest to turn into a tiny V1: open the page and see what to study today.
+```markdown
+## Question
+You said the tool must be "dead simple — open a link, vote, done." But suggest-then-vote means two separate steps, a suggestion deadline, and handling duplicates.
+
+Voting on books you pre-pick: one screen, done in a minute.
+Suggesting + voting: multiple steps, needs a cutoff, and you'll have to moderate.
+
+For V1, which one?
 ```
 
 Only after all seven gates are confirmed and precision checks pass will it output a Requirements Brief. An execution prompt is generated only when you explicitly ask.
@@ -105,6 +112,7 @@ Only after all seven gates are confirmed and precision checks pass will it outpu
 - **Narrow is more useful than all-in-one** — specialized for the clarification stage
 - **Ask less, progress more**
 - **Define boundaries first, then let AI implement**
+- **Clarify for the machine, enlighten the human** — constrain the downstream agent while helping the user discover what they actually want
 
 ---
 
