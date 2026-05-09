@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.1.0 - 2026-05-09
+
+工程化与社区基建：自动化校验、依赖更新与 Release，不改变 skill 行为契约。
+
+### 新增
+
+- `CONTRIBUTING.md`、`SECURITY.md`、`CODE_OF_CONDUCT.md`。
+- `.github/ISSUE_TEMPLATE/`（Bug / 功能建议 / 文档 / 案例贡献）与 `pull_request_template.md`。
+- `.github/dependabot.yml`（GitHub Actions 每周检查）。
+- `.github/workflows/release.yml`：推送 `v*.*.*` tag 自动创建 GitHub Release；支持 `workflow_dispatch` 补发历史 tag。
+- `.github/workflows/pr-title.yml`：PR 标题符合 Conventional Commits。
+- CI `verify` 工作流并行任务：`markdownlint-cli2`、`typos`、`lychee` 链接检查。
+- `.markdownlint-cli2.yaml`、`_typos.toml`、`.pre-commit-config.yaml`（含可选 `commit-msg` 校验）。
+- `STATE-MACHINE.md` 转移规则图代码块使用 `text` 语言标记，便于静态检查。
+
+---
+
 ## v1.0.0 - 2026-05-09
 
 首个正式发布版本。全面工程化重构，在不改变功能的前提下达到开源可发布水准。

@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [main, master]
 
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   smoke-static:
     runs-on: ubuntu-latest
@@ -17,3 +24,32 @@ jobs:
 
       - name: Run static smoke checks
         run: bash scripts/verify.sh
+
+  markdownlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Markdown lint
+        uses: DavidAnson/markdownlint-cli2-action@v23.2.0
+        with:
+          globs: "**/*.md"
+
+  typos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Spell check
+        uses: crate-ci/typos@v1
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress './**/*.md'
+          fail: true

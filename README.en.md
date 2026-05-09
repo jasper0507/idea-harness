@@ -128,12 +128,18 @@ skills/idea-harness/
   EXAMPLES.md          # Full Chinese/English conversation examples
 README.md              # Chinese docs
 README.en.md           # English docs
+CONTRIBUTING.md        # Contributing guide
+SECURITY.md            # Security policy
+CODE_OF_CONDUCT.md     # Community guidelines
 LICENSE                # MIT
 CHANGELOG.md           # Version history
 SMOKE_TESTS.md         # Smoke test checklist
 scripts/verify.sh      # Static smoke checks (POSIX / CI)
 scripts/verify.ps1     # Static smoke checks (Windows)
-.github/workflows/     # CI
+.markdownlint-cli2.yaml
+_typos.toml
+.pre-commit-config.yaml
+.github/               # workflows, issue/PR templates, dependabot
 ```
 
 This is a **skill-only** project: no app framework or dependencies — only Markdown + minimal verification scripts.
@@ -142,7 +148,7 @@ This is a **skill-only** project: no app framework or dependencies — only Mark
 
 ## Contributing
 
-Submit your **real vague ideas + clarification process**, and I'll add them to EXAMPLES.md.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) first (PR title format, local checks, releases). Submit **real vague ideas + clarification process** via the issue template, or open a PR updating `skills/idea-harness/EXAMPLES.md`.
 
 ---
 

@@ -1,0 +1,14 @@
+# typos — https://github.com/crate-ci/typos
+[files]
+extend-exclude = [
+  ".git/",
+]
+
+[default]
+extend-ignore-identifiers-re = [
+  # Skill name / tooling
+  "(?i)idea-harness",
+]
+
+[default.extend-words]
+# Add project-specific allowed tokens if typos reports false positives.

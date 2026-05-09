@@ -1,0 +1,18 @@
+# markdownlint-cli2 — https://github.com/DavidAnson/markdownlint-cli2
+
+config:
+  default: true
+  MD013: false # line length
+  MD024: false # duplicate headings in EXAMPLES.md
+  MD041: false # SKILL.md YAML frontmatter
+  MD033: false # inline HTML (badges)
+  MD031: false # blank lines around fenced blocks (README quick-start layout)
+  MD034: false # bare URLs (CONTRIBUTING / CoC attribution links)
+  MD036: false # bold pseudo-headings before fenced blocks
+  MD060: false # compact pipe tables in skill docs
+
+globs:
+  - "**/*.md"
+
+ignores:
+  - ".git/**"

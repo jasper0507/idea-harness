@@ -128,12 +128,18 @@ skills/idea-harness/
   EXAMPLES.md          # 完整中英文对话示例
 README.md              # 中文说明
 README.en.md           # English
+CONTRIBUTING.md        # 贡献指南
+SECURITY.md            # 安全披露
+CODE_OF_CONDUCT.md     # 社区准则
 LICENSE                # MIT
 CHANGELOG.md           # 版本历史
 SMOKE_TESTS.md         # 冒烟测试清单
 scripts/verify.sh      # 静态冒烟检查（POSIX / CI）
 scripts/verify.ps1     # 静态冒烟检查（Windows）
-.github/workflows/     # CI
+.markdownlint-cli2.yaml
+_typos.toml
+.pre-commit-config.yaml
+.github/               # workflows、Issue/PR 模板、dependabot
 ```
 
 这是一个 **skill-only** 项目：无应用框架与依赖，仅 Markdown + 最小校验脚本。
@@ -142,7 +148,7 @@ scripts/verify.ps1     # 静态冒烟检查（Windows）
 
 ## 贡献
 
-欢迎提交你用过的**真实模糊想法 + 澄清过程**，我会加入 EXAMPLES.md。
+请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)（PR 标题格式、本地校验、Release 流程）。欢迎提交你用过的**真实模糊想法 + 澄清过程**，也可通过 Issue 模板「贡献真实澄清案例」或直接 PR 更新 `skills/idea-harness/EXAMPLES.md`。
 
 ---
 

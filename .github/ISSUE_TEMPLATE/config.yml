@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Discussions（讨论）
+    url: https://github.com/jasper0507/idea-harness/discussions
+    about: 使用心得、提问、展示澄清过程等非缺陷类话题（请先在仓库 Settings → Features 中开启 Discussions）。

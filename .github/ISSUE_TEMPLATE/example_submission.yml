@@ -1,0 +1,28 @@
+name: 贡献真实澄清案例
+description: 提交一条模糊想法 + 多轮澄清对话，供收录进 EXAMPLES.md。
+labels: ["examples"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你愿意公开对话样本。维护者会按需摘录并隐去隐私信息。也可直接发起 PR 修改 `skills/idea-harness/EXAMPLES.md`。
+  - type: textarea
+    id: idea
+    attributes:
+      label: 最初的模糊想法（原文）
+    validations:
+      required: true
+  - type: textarea
+    id: transcript
+    attributes:
+      label: 澄清对话摘录
+      description: 按轮次粘贴；请注明语言（中文 / English）。
+    validations:
+      required: true
+  - type: checkboxes
+    id: license
+    attributes:
+      label: 授权
+      options:
+        - label: 我同意以 MIT 许可将这些文本贡献给本仓库，并可在 EXAMPLES.md 中编辑使用
+          required: true

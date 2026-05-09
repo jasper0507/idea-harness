@@ -1,0 +1,40 @@
+name: Bug 报告
+description: Skill 行为与文档契约不符，或仓库脚本 / CI 出现问题。
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请先确认你已阅读 [CONTRIBUTING.md](https://github.com/jasper0507/idea-harness/blob/main/CONTRIBUTING.md)。若为链接失效或文档笔误，也可用「文档改进」模板。
+  - type: textarea
+    id: summary
+    attributes:
+      label: 现象概要
+      description: 一句话说明哪里不对。
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: 复现步骤
+      description: 使用的宿主工具（Cursor / Claude Code 等）、触发话术、以及模型大致回复。
+      placeholder: |
+        1. 加载 skills/idea-harness
+        2. 输入：……
+        3. 期望：…… / 实际：……
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+      description: 应对齐 SKILL.md / OUTPUTS.md / STATE-MACHINE.md 中的哪一条？
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 可选上下文
+      description: 版本（git describe）、操作系统、相关截图或粘贴的对话片段。
+    validations:
+      required: false

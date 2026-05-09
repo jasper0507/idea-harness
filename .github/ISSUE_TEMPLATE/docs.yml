@@ -1,0 +1,26 @@
+name: 文档改进
+description: README、CHANGELOG、示例或 CONTRIBUTING 等文档修正与澄清。
+labels: ["documentation"]
+body:
+  - type: textarea
+    id: page
+    attributes:
+      label: 涉及文档
+      description: 文件路径或 URL。
+      placeholder: "例如 README.md、skills/idea-harness/OUTPUTS.md"
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: 当前问题
+      description: 错别字、歧义、过时说明、翻译不一致等。
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 建议修改（可选）
+      description: 可直接粘贴建议措辞或草稿补丁要点。
+    validations:
+      required: false

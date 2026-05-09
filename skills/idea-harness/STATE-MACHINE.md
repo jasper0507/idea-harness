@@ -32,7 +32,7 @@
 
 ## 转移规则
 
-```
+```text
 gathering ──[仍有门槛缺失]──→ gathering
 gathering ──[门槛完整，精确度未通过]──→ needs-precision
 gathering ──[门槛完整 + 精确度全通过]──→ ready
