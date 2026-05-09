@@ -68,7 +68,9 @@ git push origin v1.1.0
 
 ## GitHub 设置（维护者）
 
-建议在仓库 **Settings → General → Features** 中开启 **Discussions**，与 Issue 模板中的讨论入口一致。
+上游仓库 **jasper0507/idea-harness** 已开启 **Discussions**，并与 Issue 模板中的入口对应。若你维护 fork，可在 fork 的 **Settings → General → Features** 中自行开启。
+
+**默认分支 `main`** 已启用分支保护与 Rules：`Verify` 工作流的四项检查（`smoke-static` / `markdownlint` / `typos` / `links`）、PR 标题规范检查（`conventional`），以及必须通过 Pull Request 合入（审批准许数为 0，可自行合并自己的 PR）。
 
 ## Contributing (English)
 
