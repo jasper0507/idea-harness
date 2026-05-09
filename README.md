@@ -127,10 +127,13 @@ skills/idea-harness/
   VOCABULARY.md        # 用语规范
   EXAMPLES.md          # 完整对话示例
 CLAUDE.md              # 给 AI agent 的仓库说明
+LICENSE                # MIT
+CHANGELOG.md           # 版本记录
+.github/workflows/verify.yml
 scripts/verify.sh      # 静态冒烟检查
 ```
 
-Skill-only 项目：无依赖，只有 Markdown + 一个校验脚本。
+Skill-only 项目：无运行时依赖；除 skill 与校验脚本外，仅有许可证、变更记录和最小 CI。
 
 ---
 

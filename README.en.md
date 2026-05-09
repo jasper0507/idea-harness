@@ -127,10 +127,13 @@ skills/idea-harness/
   VOCABULARY.md        # Language conventions
   EXAMPLES.md          # Full conversation examples
 CLAUDE.md              # Repo context for AI agents
+LICENSE                # MIT
+CHANGELOG.md           # Version history
+.github/workflows/verify.yml
 scripts/verify.sh      # Static smoke checks
 ```
 
-Skill-only project: no dependencies — just Markdown + one verification script.
+Skill-only project: no runtime dependencies — skill markdown, one verify script, license, changelog, and minimal CI only.
 
 ---
 

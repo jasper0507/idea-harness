@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Static smoke checks — see SMOKE_TESTS.md for full behavioral test cases
+# Static smoke checks — contract notes in repo CLAUDE.md and skills/idea-harness/SKILL.md
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

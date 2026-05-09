@@ -1,6 +1,6 @@
 This repo contains a single skill: `idea-harness`.
 
-The skill lives in `skills/idea-harness/`. Entry point is `SKILL.md`; it references four supporting files:
+The skill lives in `skills/idea-harness/`. Entry point is `SKILL.md`; it references five supporting files:
 
 - `STATE-MACHINE.md` — four states and their transition rules
 - `PRECISION-GATE.md` — four precision checks that gate the `ready` state

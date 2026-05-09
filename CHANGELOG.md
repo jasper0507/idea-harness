@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.0.1 - 2026-05-09
+
+收底：对齐文档与实际仓库状态。
+
+- `scripts/verify.sh` 注释不再引用已删除的 `SMOKE_TESTS.md`。
+- `CLAUDE.md` 修正为支撑文件数量表述（五份）。
+- 中英文 README「项目结构」补充 `LICENSE`、`CHANGELOG.md`、`.github/workflows/verify.yml`。
+
+---
+
 ## v2.0.0 - 2026-05-09
 
 激进精简：砍掉一切不直接服务于 skill 本身的文件，对标纯 skill 仓库的极简哲学。
