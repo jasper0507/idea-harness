@@ -2,9 +2,15 @@
 
 这个文件记录 Idea Harness 的公开版本变化。
 
-## v0.5.0 - 2026-05-06
+## v0.5.1 - 2026-05-09
 
 当前推荐版本。
+
+- 修正 `README.md` / `README.en.md` 中的项目结构说明（移除仓库中不存在的 `docs/` 路径）。
+- 新增 `scripts/verify.sh` 与 `scripts/verify.ps1`，一键运行与 `SMOKE_TESTS.md` 一致的静态冒烟检查。
+- 新增 GitHub Actions 工作流，在推送与拉取请求上自动执行上述检查。
+
+## v0.5.0 - 2026-05-06
 
 - 从规则清单升级为硬状态机：`gathering` / `needs-precision` / `blocked` / `ready` 四个显式状态，带转移规则和阻断条件。
 - 新增精确度检查（Precision Gate）：拦住"表面完整但不够精确"的需求。四项检查——目标一致性、隐藏默认值、场景走查、矛盾扫描。

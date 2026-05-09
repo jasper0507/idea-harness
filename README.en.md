@@ -127,9 +127,12 @@ Only after all seven gates are confirmed and precision checks pass will it outpu
 README.md
 README.en.md
 LICENSE
-docs/
-  designs/
-    v0.4.0-socratic-harness-design.md
+CHANGELOG.md
+scripts/
+  verify.sh            # POSIX: static smoke checks (same as CI)
+  verify.ps1           # Windows: same checks
+.github/workflows/
+  verify.yml           # Run verify.sh on push / PR
 skills/
   idea-harness/
     SKILL.md             # Core entry (~95 lines)
@@ -138,10 +141,10 @@ skills/
     OUTPUTS.md           # All output templates
     VOCABULARY.md        # Internal terms, user-facing language conventions
     EXAMPLES.md          # Full Chinese/English conversation examples
-    SMOKE_TESTS.md       # v0.5.0 smoke test checklist
+    SMOKE_TESTS.md       # Smoke test checklist (static commands; automation in scripts/)
 ```
 
-This is a **skill-only** project, kept extremely lightweight. No scripts, no frameworks, no unnecessary features.
+This is a **skill-only** project: no app framework or dependencies—only minimal scripts for verification and CI.
 
 ---
 

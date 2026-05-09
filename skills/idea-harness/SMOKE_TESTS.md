@@ -1,6 +1,9 @@
-# Idea Harness v0.5.0 冒烟测试
+# Idea Harness 冒烟测试
 
-这些测试用于手动验证 skill 行为契约。仓库保持 skill-only，因此测试以用户输入、预期可见输出规则和静态检查命令的形式记录。
+这些测试用于手动验证 skill 行为契约。仓库保持 skill-only；静态检查已脚本化，与下节命令等价：
+
+- POSIX / CI：`bash scripts/verify.sh`（需已安装 [ripgrep](https://github.com/BurntSushi/ripgrep) `rg`）
+- Windows：`pwsh -File scripts/verify.ps1`
 
 ## 静态检查
 

@@ -127,9 +127,12 @@ D. 学了多久、有没有坚持不清楚
 README.md
 README.en.md
 LICENSE
-docs/
-  designs/
-    v0.4.0-socratic-harness-design.md
+CHANGELOG.md
+scripts/
+  verify.sh            # POSIX：静态冒烟检查（与 CI 相同）
+  verify.ps1           # Windows：同上
+.github/workflows/
+  verify.yml           # 推送 / PR 自动跑 verify.sh
 skills/
   idea-harness/
     SKILL.md             # 核心入口（~95 行）
@@ -138,10 +141,10 @@ skills/
     OUTPUTS.md           # 所有输出模板
     VOCABULARY.md        # 内部术语、用户用语规范
     EXAMPLES.md          # 完整中英文对话示例
-    SMOKE_TESTS.md       # v0.5.0 冒烟测试清单
+    SMOKE_TESTS.md       # 冒烟测试清单（含静态检查命令；自动化见 scripts/）
 ```
 
-这是一个 **skill-only** 项目，保持极致轻量。没有脚本、没有框架、没有多余功能。
+这是一个 **skill-only** 项目：无应用框架与依赖，仅附带用于校验与 CI 的最小脚本。
 
 ---
 
