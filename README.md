@@ -58,16 +58,6 @@ cp -r idea-harness/skills/idea-harness .cursor/skills/
 echo "Read and follow skills/idea-harness/SKILL.md when clarifying app ideas." >> AGENTS.md
 ```
 
-**Hermes Agent**
-```bash
-cp -r idea-harness/skills/idea-harness ~/.hermes/skills/
-```
-
-**OpenClaw**
-```bash
-cp -r idea-harness/skills/idea-harness ~/.openclaw/skills/
-```
-
 ### 3. 开始对话
 
 ```text
